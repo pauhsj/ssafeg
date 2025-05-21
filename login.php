@@ -1,3 +1,36 @@
+<?php
+session_start();
+require("conexion.php");
+
+try {
+    $conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Obtener datos del formulario
+    $correo = $_POST['correo'];
+    $clave = $_POST['clave'];
+
+    // Buscar usuario
+    $stmt = $conn->prepare("SELECT * FROM usuario WHERE email = :email");
+    $stmt->bindParam(':email', $correo);
+    $stmt->execute();
+    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($usuario && password_verify($clave, $usuario['password'])) {
+        // Autenticación exitosa
+        $_SESSION['usuario_id'] = $usuario['id_cliente'];
+        $_SESSION['usuario_nombre'] = $usuario['nombre'];
+        header("Location: html/dashboard.php");
+        exit;
+    } else {
+        echo "<script>alert('Correo o contraseña incorrectos.'); window.location.href='index.html';</script>";
+    }
+
+} catch (PDOException $e) {
+    echo "Error de conexión: " . $e->getMessage();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -139,8 +172,7 @@
   </div>
 
   <div class="right-side">
-    <form class="login-form" onsubmit="return validarLogin(event)">
-      <h2>¡Bienvenido de nuevo a SafeGarden!</h2>
+<form class="login-form" action="login.php" method="POST">      <h2>¡Bienvenido de nuevo a SafeGarden!</h2>
       <p>Inicia sesión en tu cuenta</p>
 
       <input type="email" id="correo" placeholder="Tu correo electrónico" required>

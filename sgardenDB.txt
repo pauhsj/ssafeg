@@ -1,41 +1,32 @@
+CREATE DATABASE IF NOT EXISTS safegardendb_local;
+USE safegardendb_local;
 
-CREATE DATABASE IF NOT EXISTS safegardedb;
-USE safegardedb;
-
-CREATE TABLE  usuario (
+-- Usuarios
+CREATE TABLE usuario (
   id_cliente INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL,
   email VARCHAR(100) NOT NULL UNIQUE,
-  password VARCHAR(255) NOT NULL, -- Añadido campo de password para login
+  password VARCHAR(255) NOT NULL,
   telefono VARCHAR(20),
   direccion TEXT,
   creado_en DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabla de sensores
+-- Sensores
 CREATE TABLE sensor (
   id_sensor INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL,
   tipo ENUM('Temperatura','Humedad','HumedadSuelo','Movimiento') NOT NULL,
   ubicacion VARCHAR(255),
   id_cliente INT,
-  FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente) ON DELETE SET NULL
+  FOREIGN KEY (id_cliente) REFERENCES usuario(id_cliente) ON DELETE SET NULL
 );
 
--- Tabla de mediciones generales
+-- Mediciones (para todos los sensores)
 CREATE TABLE medicion (
   id_medicion INT AUTO_INCREMENT PRIMARY KEY,
   id_sensor INT NOT NULL,
   valor DECIMAL(10,2) NOT NULL,
-  fecha_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (id_sensor) REFERENCES sensor(id_sensor) ON DELETE CASCADE
-);
-
--- Tabla de calidad de aire (puede ser opcional si ya usas `medicion`)
-CREATE TABLE calidad_aire (
-  id_calidad INT AUTO_INCREMENT PRIMARY KEY,
-  id_sensor INT NOT NULL,
-  nivel DECIMAL(10,2) NOT NULL,
   fecha_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (id_sensor) REFERENCES sensor(id_sensor) ON DELETE CASCADE
 );
@@ -56,4 +47,25 @@ CREATE TABLE ahuyentamiento (
   intensidad DECIMAL(5,2) NOT NULL,
   fecha_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (id_deteccion) REFERENCES deteccion_movimiento(id_deteccion) ON DELETE CASCADE
+);
+
+
+-- cambios 
+
+--  Eliminar la clave foránea incorrecta
+ALTER TABLE sensor DROP FOREIGN KEY sensor_ibfk_1;
+
+--Agregar la clave foránea correcta que apunte a la tabla `usuario`
+ALTER TABLE sensor
+
+ADD CONSTRAINT fk_sensor_usuario
+FOREIGN KEY (id_cliente) REFERENCES usuario(id_cliente)
+ON DELETE SET NULL;
+
+
+CREATE TABLE registros (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  temperatura FLOAT,
+  humedad FLOAT,
+  fecha DATETIME DEFAULT CURRENT_TIMESTAMP
 );

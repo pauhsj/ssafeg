@@ -341,8 +341,8 @@
             <div class="icon-container icon-temperature mb-3">
               <i class='bx bxs-thermometer'></i>
             </div>
-            <h5 class="card-title">Temperatura</h5>
-            <p class="card-text fs-4">23°C</p>
+            <h5 class="card-title" id="tempValor">-- °C</h5>
+               <p class="card-text">Última lectura registrada.</p>
           </div>
         </div>
       </div>
@@ -355,7 +355,8 @@
               <i class='bx bxs-droplet'></i>
             </div>
             <h5 class="card-title">Humedad</h5>
-            <p class="card-text fs-4">65%</p>
+            <h5 class="card-title" id="humValor">-- %</h5>
+            <p class="card-text">Última lectura registrada.</p>
           </div>
         </div>
       </div>
@@ -385,39 +386,43 @@
  </div>
   
   <script>
-    const ctx = document.getElementById('graficoDatos').getContext('2d');
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
-        datasets: [
-          {
-            label: 'Temperatura (°C)',
-            data: [21, 22, 23, 24, 23],
-            backgroundColor: '#ff6f61'
-          },
-          {
-            label: 'Humedad (%)',
-            data: [60, 62, 65, 64, 66],
-            backgroundColor: '#00bcd4'
-          },
-          {
-            label: 'Animales Detectados',
-            data: [1, 0, 2, 0, 3],
-            backgroundColor: '#4caf50'
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true
-          }
+function cargarDatosSensor() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'obtener_datos.php', true);
+
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      try {
+        var data = JSON.parse(xhr.responseText);
+        if (!data.error) {
+          document.getElementById('tempValor').textContent = data.temperatura + ' °C';
+          document.getElementById('humValor').textContent = data.humedad + ' %';
+        } else {
+          document.getElementById('tempValor').textContent = 'No disponible';
+          document.getElementById('humValor').textContent = 'No disponible';
         }
+      } catch (e) {
+        console.error('Error al parsear JSON:', e);
       }
-    });
-  </script>
+    } else {
+      console.error('Error en la petición AJAX: ' + xhr.status);
+    }
+  };
+
+  xhr.onerror = function() {
+    console.error('Error en la petición AJAX');
+  };
+
+  xhr.send();
+}
+
+// Ejecutar al cargar la página
+cargarDatosSensor();
+
+// Actualizar cada 10 segundos sin refrescar la página
+setInterval(cargarDatosSensor, 10000);
+</script>
+
 
 
     <!-- Core JS -->

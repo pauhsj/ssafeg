@@ -1,6 +1,6 @@
 
 CREATE DATABASE IF NOT EXISTS safegardedb;
-USE safegardedb;
+
 
 CREATE TABLE  usuario (
   id_cliente INT AUTO_INCREMENT PRIMARY KEY,

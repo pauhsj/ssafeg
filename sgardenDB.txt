@@ -1,0 +1,59 @@
+
+CREATE DATABASE IF NOT EXISTS safegardedb;
+USE safegardedb;
+
+CREATE TABLE  usuario (
+  id_cliente INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL, -- Añadido campo de password para login
+  telefono VARCHAR(20),
+  direccion TEXT,
+  creado_en DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabla de sensores
+CREATE TABLE sensor (
+  id_sensor INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  tipo ENUM('Temperatura','Humedad','HumedadSuelo','Movimiento') NOT NULL,
+  ubicacion VARCHAR(255),
+  id_cliente INT,
+  FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente) ON DELETE SET NULL
+);
+
+-- Tabla de mediciones generales
+CREATE TABLE medicion (
+  id_medicion INT AUTO_INCREMENT PRIMARY KEY,
+  id_sensor INT NOT NULL,
+  valor DECIMAL(10,2) NOT NULL,
+  fecha_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (id_sensor) REFERENCES sensor(id_sensor) ON DELETE CASCADE
+);
+
+-- Tabla de calidad de aire (puede ser opcional si ya usas `medicion`)
+CREATE TABLE calidad_aire (
+  id_calidad INT AUTO_INCREMENT PRIMARY KEY,
+  id_sensor INT NOT NULL,
+  nivel DECIMAL(10,2) NOT NULL,
+  fecha_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (id_sensor) REFERENCES sensor(id_sensor) ON DELETE CASCADE
+);
+
+-- Detección de movimiento
+CREATE TABLE deteccion_movimiento (
+  id_deteccion INT AUTO_INCREMENT PRIMARY KEY,
+  id_sensor INT NOT NULL,
+  fecha_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (id_sensor) REFERENCES sensor(id_sensor) ON DELETE CASCADE
+);
+
+-- Ahuyentamiento (respuesta al movimiento)
+CREATE TABLE ahuyentamiento (
+  id_ahuyentamiento INT AUTO_INCREMENT PRIMARY KEY,
+  id_deteccion INT NOT NULL,
+  tipo ENUM('Sonido','Luz') NOT NULL,
+  intensidad DECIMAL(5,2) NOT NULL,
+  fecha_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (id_deteccion) REFERENCES deteccion_movimiento(id_deteccion) ON DELETE CASCADE
+);

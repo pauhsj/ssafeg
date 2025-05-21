@@ -1,3 +1,55 @@
+
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "120994knj";
+$dbname = "safegardendb_local";
+
+$mysqli = new mysqli($servername, $username, $password, $dbname);
+if ($mysqli->connect_error) {
+    die('Error de conexión (' . $mysqli->connect_errno . '): ' . $mysqli->connect_error);
+}
+
+// Consulta para obtener sensores con su última medición
+$sql = "
+SELECT s.id_sensor, s.nombre, s.tipo, m.valor, m.fecha_hora
+FROM sensor s
+LEFT JOIN (
+    SELECT id_sensor, valor, fecha_hora
+    FROM medicion
+    WHERE (id_sensor, fecha_hora) IN (
+        SELECT id_sensor, MAX(fecha_hora)
+        FROM medicion
+        GROUP BY id_sensor
+    )
+) m ON s.id_sensor = m.id_sensor
+ORDER BY s.tipo, s.nombre
+";
+
+$result = $mysqli->query($sql);
+
+if (!$result) {
+    die("Error en la consulta: " . $mysqli->error);
+}
+
+// Preparar array para clasificar sensores por tipo
+$sensores = [
+    'Temperatura' => [],
+    'Humedad' => [],
+    'HumedadSuelo' => [],
+    'Movimiento' => []
+];
+
+while ($row = $result->fetch_assoc()) {
+    $tipo = $row['tipo'];
+    if (isset($sensores[$tipo])) {
+        $sensores[$tipo][] = $row;
+    }
+}
+
+$mysqli->close();
+?>
+
 <!DOCTYPE html>
 
 <!-- =========================================================
@@ -327,41 +379,59 @@
                       </div>
                     </div>
                   </div>
+                 <div class="container mt-4">
+
+  
                  <div class="row g-4">
 
-                 
-      
-                 <!-- Tarjeta: Temperatura -->
-      
-                 <div class="col-md-4">
-      
-                 <div class="card card-custom text-center">
-      
-                 <div class="card-body">
-            <div class="icon-container icon-temperature mb-3">
-              <i class='bx bxs-thermometer'></i>
+  
+                 <!-- Tarjetas de Temperatura -->
+  
+                 <?php if (!empty($sensores['Temperatura'])): ?>
+      <?php foreach ($sensores['Temperatura'] as $sensor): ?>
+        <div class="col-md-4">
+          <div class="card card-custom p-3">
+            <div class="d-flex align-items-center mb-3">
+              <div class="icon-container icon-temperature me-3">
+                <i class="bx bx-temperature"></i>
+              </div>
+              <h5 class="mb-0"><?= htmlspecialchars($sensor['nombre']) ?></h5>
             </div>
-            <h5 class="card-title" id="tempValor">-- °C</h5>
-               <p class="card-text">Última lectura registrada.</p>
+            <h2 class="fw-bold">
+              <?= htmlspecialchars($sensor['valor'] !== null ? $sensor['valor'] . ' °C' : 'Sin datos') ?>
+            </h2>
+            <small class="text-muted"><?= $sensor['fecha_hora'] ?? '' ?></small>
           </div>
         </div>
-      </div>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <p>No hay sensores de temperatura disponibles.</p>
+    <?php endif; ?>
 
-      <!-- Tarjeta: Humedad -->
-      <div class="col-md-4">
-        <div class="card card-custom text-center">
-          <div class="card-body">
-            <div class="icon-container icon-humidity mb-3">
-              <i class='bx bxs-droplet'></i>
+    <!-- Tarjetas de Humedad -->
+    <?php if (!empty($sensores['Humedad'])): ?>
+      <?php foreach ($sensores['Humedad'] as $sensor): ?>
+        <div class="col-md-4">
+          <div class="card card-custom p-3">
+            <div class="d-flex align-items-center mb-3">
+              <div class="icon-container icon-humidity me-3">
+                <i class="bx bx-droplet"></i>
+              </div>
+              <h5 class="mb-0"><?= htmlspecialchars($sensor['nombre']) ?></h5>
             </div>
-            <h5 class="card-title">Humedad</h5>
-            <h5 class="card-title" id="humValor">-- %</h5>
-            <p class="card-text">Última lectura registrada.</p>
+            <h2 class="fw-bold">
+              <?= htmlspecialchars($sensor['valor'] !== null ? $sensor['valor'] . ' %' : 'Sin datos') ?>
+            </h2>
+            <small class="text-muted"><?= $sensor['fecha_hora'] ?? '' ?></small>
           </div>
         </div>
-      </div>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <p>No hay sensores de humedad disponibles.</p>
+    <?php endif; ?>
 
-      <!-- Tarjeta: Detección de Animales -->
+
+    <!-- Tarjeta: Detección de Animales -->
       <div class="col-md-4">
         <div class="card card-custom text-center">
           <div class="card-body">
@@ -373,9 +443,8 @@
           </div>
         </div>
       </div>
-   
 
-    <!-- Gráfico de barras -->
+      <!-- Gráfico de barras -->
     <div class="card card-custom mt-5">
       <div class="card-body">
         <h5 class="card-title">Historial de Datos</h5>
@@ -384,11 +453,16 @@
     </div>
   </div>
  </div>
-  
+
+
+  </div>
+</div>
+
+      
   <script>
 function cargarDatosSensor() {
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'obtener_datos.php', true);
+  xhr.open('GET', 'obtenerDatos.php', true);
 
   xhr.onload = function() {
     if (xhr.status === 200) {

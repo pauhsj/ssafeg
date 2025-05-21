@@ -1,25 +1,33 @@
-
 <?php
-session_start();
-require("conexion.php");
+$servername = "localhost";
+$username = "root";
+$password = "120994knj";
+$dbname = "safegardendb_local";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+// Obtener los datos desde la URL
+$temperatura = $_GET['temperatura'] ?? null;
+$humedad = $_GET['humedad'] ?? null;
 
-// Verificar conexión
-if ($conn->connect_error) {
-    die(json_encode(["error" => "Conexión fallida: " . $conn->connect_error]));
-}
+if ($temperatura !== null && $humedad !== null) {
+    // Crear conexión
+    $conexion = new mysqli($servername, $username, $password, $dbname);
 
-// Obtener el último registro
-$sql = "SELECT temperatura, humedad, fecha FROM registros ORDER BY fecha DESC LIMIT 1";
-$result = $conn->query($sql);
+    // Verificar conexión
+    if ($conexion->connect_error) {
+        die("Conexión fallida: " . $conexion->connect_error);
+    }
 
-if ($result && $row = $result->fetch_assoc()) {
-    echo json_encode($row);
+    // Insertar datos
+    $sql = "INSERT INTO registros (temperatura, humedad, fecha) VALUES ('$temperatura', '$humedad', NOW())";
+
+    if ($conexion->query($sql) === TRUE) {
+        echo "Datos insertados correctamente.";
+    } else {
+        echo "Error: " . $conexion->error;
+    }
+
+    $conexion->close();
 } else {
-    echo json_encode(["error" => "No hay datos disponibles"]);
+    echo "Faltan parámetros de temperatura o humedad.";
 }
-
-$conn->close();
 ?>
-

@@ -1,0 +1,632 @@
+/* —— Reset y Base —— */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+}
+body, html {
+  height: 100%;
+  background-color: #fff;
+}
+
+/* —— Layout Principal —— */
+.wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+.sidebar {
+  width: 250px;
+  background-color: #fff;
+  color: #366738;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border-right: 1px solid #eee;
+}
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.logo-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #45A049;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+}
+.logo-text {
+  margin-top: 8px;
+  font-size: 18px;
+  color: #366738;
+}
+
+.sidebar-wrapper ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+.sidebar-wrapper ul li {
+  margin-bottom: 20px;
+  width: 100%;
+}
+.sidebar-wrapper ul li a {
+  color: #366738;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  width: 100%;
+  transition: background 0.3s, color 0.3s;
+}
+.sidebar-wrapper ul li.active a,
+.sidebar-wrapper ul li a:hover {
+  background-color: #4CAF50;
+  color: #fff;
+}
+.sidebar-wrapper ul li a i {
+  margin-right: 10px;
+}
+
+.main-panel {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background: #f7f7f7;
+}
+.navbar {
+  background-color: #4CAF50;
+  padding: 15px 20px;
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+}
+.content {
+  padding: 20px;
+}
+
+/* —— Tarjetas —— */
+.row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.col-lg-4 {
+  flex: 1;
+  min-width: 280px;
+}
+.card {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+}
+.card:hover {
+  transform: translateY(-5px);
+}
+.card-header {
+  border-bottom: 1px solid #eee;
+  margin-bottom: 15px;
+}
+.card-category {
+  color: #366738;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+.card-title {
+  color: #366738;
+  font-size: 22px;
+}
+.text-muted {
+  color: #999;
+  font-size: 12px;
+}
+
+/* —— Pie de página —— */
+.footer {
+  text-align: center;
+  padding: 15px;
+  font-size: 14px;
+  color: #777;
+  background-color: #fff;
+  border-top: 1px solid #eee;
+}
+
+/* —— Filtro de Fechas —— */
+.registros-fecha {
+  margin-top: 30px;
+}
+.date-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  margin-bottom: 1rem;
+}
+.date-filter .field {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+}
+.date-filter label {
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+  color: #366738;
+}
+.date-filter input[type="date"] {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  min-width: 160px;
+  transition: border-color 0.2s;
+}
+.date-filter input[type="date"]:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+.date-filter button {
+  padding: 0.6rem 1.2rem;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+.date-filter button:hover {
+  background-color: #45A049;
+  transform: translateY(-1px);
+}
+.date-filter button:active {
+  transform: translateY(0);
+}
+
+/* —— Tabla responsive —— */
+.table-responsive {
+  overflow-x: auto;
+}
+.table-responsive table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table-responsive th,
+.table-responsive td {
+  padding: 0.75rem;
+  border: 1px solid #eee;
+  text-align: left;
+}
+.table-responsive thead {
+  background-color: #d4edda;
+}
+
+/* —— Perfil: Avatar y estilo —— */
+.perfil-card {
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
+}
+.perfil-header {
+  padding: 20px;
+}
+.avatar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.avatar {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #A3C586;
+}
+#avatarInput {
+  margin-top: 10px;
+}
+.perfil-nombre {
+  margin-top: 12px;
+  font-size: 20px;
+  color: #366738;
+}
+
+/* —— Reset y Base —— */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+}
+body, html {
+  height: 100%;
+  background-color: #fff;
+}
+
+/* —— Layout Principal —— */
+.wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+.sidebar {
+  width: 250px;
+  background-color: #fff;
+  color: #366738;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border-right: 1px solid #eee;
+}
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.logo-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #45A049;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+}
+.logo-text {
+  margin-top: 8px;
+  font-size: 18px;
+  color: #366738;
+}
+
+.sidebar-wrapper ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+.sidebar-wrapper ul li {
+  margin-bottom: 20px;
+}
+.sidebar-wrapper ul li a {
+  color: #366738;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  transition: background 0.3s, color 0.3s;
+}
+.sidebar-wrapper ul li.active a,
+.sidebar-wrapper ul li a:hover {
+  background-color: #4CAF50;
+  color: #fff;
+}
+.sidebar-wrapper ul li a i {
+  margin-right: 10px;
+}
+
+.main-panel {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background: #f7f7f7;
+}
+.navbar {
+  background-color: #4CAF50;
+  padding: 15px 20px;
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+}
+.content {
+  padding: 20px;
+}
+
+/* —— Tarjetas —— */
+.row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.col-lg-4 {
+  flex: 1;
+  min-width: 280px;
+}
+.card {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+}
+.card:hover {
+  transform: translateY(-5px);
+}
+.card-header {
+  border-bottom: 1px solid #eee;
+  margin-bottom: 15px;
+}
+.card-category {
+  color: #366738;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+.card-title {
+  color: #366738;
+  font-size: 22px;
+}
+.text-muted {
+  color: #999;
+  font-size: 12px;
+}
+
+/* —— Pie de página —— */
+.footer {
+  text-align: center;
+  padding: 15px;
+  font-size: 14px;
+  color: #777;
+  background-color: #fff;
+  border-top: 1px solid #eee;
+}
+
+/* —— Filtro de Fechas —— */
+.registros-fecha {
+  margin-top: 30px;
+}
+.date-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  margin-bottom: 1rem;
+}
+.date-filter .field {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+}
+.date-filter label {
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+  color: #366738;
+}
+.date-filter input[type="date"] {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  min-width: 160px;
+  transition: border-color 0.2s;
+}
+.date-filter input[type="date"]:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+.date-filter button {
+  padding: 0.6rem 1.2rem;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+.date-filter button:hover {
+  background-color: #45A049;
+  transform: translateY(-1px);
+}
+.date-filter button:active {
+  transform: translateY(0);
+}
+
+/* —— Tabla responsive —— */
+.table-responsive {
+  overflow-x: auto;
+}
+.table-responsive table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table-responsive th,
+.table-responsive td {
+  padding: 0.75rem;
+  border: 1px solid #eee;
+  text-align: left;
+}
+.table-responsive thead {
+  background-color: #d4edda;
+}
+
+/* —— Perfil horizontal —— */
+.profile-container {
+  padding: 20px;
+}
+
+.profile-card {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.profile-card.edit-mode {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.profile-left {
+  flex: 1;
+  text-align: center;
+}
+
+.photo-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-icon {
+  font-size: 50px;
+  color: #aaa;
+}
+
+.profile-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+  background-color: #f0f0f0;
+}
+
+.custom-file-label {
+  background-color: #45A049;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 5px;
+  display: inline-block;
+  transition: background-color 0.3s;
+}
+
+.custom-file-label:hover {
+  background-color: #3b8b3d;
+}
+
+.profile-right {
+  flex: 2;
+  padding: 20px;
+}
+
+.profile-right h3 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.joined {
+  color: #888;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.profile-info p {
+  margin: 10px 0;
+  font-size: 15px;
+  color: #444;
+}
+
+.profile-info i {
+  margin-right: 10px;
+  color: #366738;
+}
+
+.edit-btn {
+  padding: 10px 15px;
+  border: none;
+  background-color: #45A049;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.bookmark-list {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.editable-card {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-align: center;
+}
+
+.editable-card:hover {
+  background-color: #f0f0f0;
+}
+
+.editable-card h4 {
+  margin: 0;
+  padding: 10px 0;
+  font-size: 16px;
+  color: #366738;
+  font-weight: bold;
+}
+
+.edit-profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.edit-profile-form input,
+.edit-profile-form select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.edit-profile-form button {
+  background-color: #45A049;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.edit-profile-form button:hover {
+  background-color: #3b8b3d;
+}
+
+.image-upload-input {
+  margin-top: 10px;
+}
+
+.photo-wrapper input[type="file"] {
+  padding: 8px;
+  font-size: 14px;
+}
+
+

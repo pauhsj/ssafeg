@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Contraseña - EcoGarden</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .left-side {
+            background-color: #f5f5f5;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .left-side img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .left-side h2 {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        .left-side p {
+            font-size: 16px;
+            color: gray;
+            margin-top: 10px;
+        }
+
+        .right-side {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .reset-form {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 300px;
+            position: relative;
+            text-align: center;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #000;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 20px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .reset-form h2 {
+            margin: 20px 0 10px;
+            font-size: 20px;
+        }
+
+        .reset-form p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .reset-form input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #6c8f6e;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .reset-btn:hover {
+            background-color: #2e5a30;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-side">
+            <img src="https://www.gob.mx/cms/uploads/article/main_image/59107/huerto-urbano-2-c.jpg" alt="Jardín urbano">
+            <h2>Cuida tu jardín como cuidas de ti</h2>
+            <p>Protege con solo unos clics</p>
+        </div>
+        <div class="right-side">
+            <div class="reset-form">
+                <button class="close-btn" aria-label="Cerrar">×</button>
+                <h2>¿Olvidaste tu contraseña?</h2>
+                <p>Introduce tu correo para restablecerla</p>
+                <form>
+                    <input type="email" name="email" placeholder="Tu correo electrónico" required>
+                    <button type="submit" class="reset-btn">Restablecer contraseña</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

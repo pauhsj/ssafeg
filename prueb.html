@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Navbar Ejemplo</title>
+  <style>
+    /* Reset básico */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    /* Contenedor de la navbar */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #fff;
+      padding: 10px 20px;
+      /* sombra sutil si quieres darle profundidad */
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Listas de enlaces izquierda y derecha */
+    .nav-left,
+    .nav-right {
+      display: flex;
+      list-style: none;
+    }
+
+    .nav-left li {
+      margin-right: 2rem;
+    }
+
+    .nav-right li {
+      margin-left: 1rem;
+    }
+
+    /* Estilo común de enlaces */
+    .navbar a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    .navbar a:hover {
+      color: #4CAF50;
+    }
+
+    /* Botón de SIGN UP */
+    .signup-button {
+      display: inline-block;
+      padding: 8px 16px;
+      background-color: #4CAF50;
+      color: #fff;
+      border-radius: 4px;
+      font-weight: 600;
+      transition: background-color 0.2s;
+    }
+    .signup-button:hover {
+      background-color: #45A049;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <!-- Enlaces del lado izquierdo -->
+    <ul class="nav-left">
+      <li><a href="#">HOME</a></li>
+      <li><a href="#">ABOUT US</a></li>
+      <li><a href="#">RESOURCES</a></li>
+      <li><a href="#">BLOG</a></li>
+    </ul>
+
+    <!-- Enlaces del lado derecho -->
+    <ul class="nav-right">
+      <li><a href="#">LOG IN</a></li>
+      <li><a href="#" class="signup-button">SIGN UP</a></li>
+    </ul>
+  </nav>
+
+</body>
+</html>

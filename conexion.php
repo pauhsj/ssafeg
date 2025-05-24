@@ -1,9 +1,11 @@
 <?php 
 $servername = "localhost";
-$username = "u557447082_9x8vh";
-$password ="~s0yVXwZZ";
-$dbname = "u557447082_safegardedb";
+$username = "root";
+$password ="120994knj";
+$dbname = "safegardendb_local";
 $conexion = new mysqli($servername, $username, $password, $dbname);
+
+
 
 // Verificar la conexión
 if ($conexion->connect_error) {

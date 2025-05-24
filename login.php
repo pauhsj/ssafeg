@@ -1,42 +1,58 @@
 <?php
-session_start();
-require("conexion.php");
+
+$host = "localhost";
+$username = "root";
+$password = "120994knj";
+$dbname = "safegardendb_local";
 
 try {
-    $conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $conexion = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+    $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Obtener datos del formulario
-    $correo = $_POST['correo'];
-    $clave = $_POST['clave'];
+    // Traer todos los usuarios
+    $usuarios = $conexion->query("SELECT id_cliente, password FROM usuario")->fetchAll(PDO::FETCH_ASSOC);
 
-    // Buscar usuario
-    $stmt = $conn->prepare("SELECT * FROM usuario WHERE email = :email");
-    $stmt->bindParam(':email', $correo);
-    $stmt->execute();
-    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+    foreach ($usuarios as $usuario) {
+        $id = $usuario['id_cliente'];
+        $clave = $usuario['password'];
 
-    if ($usuario && password_verify($clave, $usuario['password'])) {
-        // Autenticación exitosa
-        $_SESSION['usuario_id'] = $usuario['id_cliente'];
-        $_SESSION['usuario_nombre'] = $usuario['nombre'];
-        header("Location: html/dashboard.php");
-        exit;
-    } else {
-        echo "<script>alert('Correo o contraseña incorrectos.'); window.location.href='index.html';</script>";
+        // Verificamos si la contraseña ya está encriptada
+        if (!password_get_info($clave)['algo']) {
+            // Encriptar
+            $hash = password_hash($clave, PASSWORD_DEFAULT);
+            
+            // Actualizar en la base de datos
+            $stmt = $conexion->prepare("UPDATE usuario SET password = :hash WHERE id_cliente = :id");
+            $stmt->execute([
+                ':hash' => $hash,
+                ':id' => $id
+            ]);
+
+            
+        } else {
+        }
     }
 
+    
 } catch (PDOException $e) {
-    echo "Error de conexión: " . $e->getMessage();
+    echo "❌ Error de conexión: " . $e->getMessage();
 }
+
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> Iniciar Sesión - SafeGarden</title>
+  <title> Iniciar Sesión | SafeGarden</title>
+
+  <meta name="description" content="" />
+
+  <link rel="icon" type="image/x-icon" href="../assets/img/favicon/logoSG.png" />
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <style>
     * {
@@ -172,11 +188,11 @@ try {
   </div>
 
   <div class="right-side">
-<form class="login-form" action="login.php" method="POST">      <h2>¡Bienvenido de nuevo a SafeGarden!</h2>
+<form class="login-form" action="html/dashboard.php" method="POST"> <h2>¡Bienvenido de nuevo a SafeGarden!</h2>
       <p>Inicia sesión en tu cuenta</p>
 
-      <input type="email" id="correo" placeholder="Tu correo electrónico" required>
-      <input type="password" id="clave" placeholder="Contraseña" required>
+      <input type="email" id="correo" name="correo" placeholder="Tu correo electrónico" required>
+      <input type="password" id="clave" name="clave" placeholder="Contraseña" required>
 
       <div class="options">
         <label><input type="checkbox" id="recordar"> Recuérdame</label>
@@ -192,47 +208,8 @@ try {
   </div>
 </div>
 
-<script>
-  const correoCorrecto = "paulina@gmail.com";
-  const claveCorrecta = "1234";
 
-  // Cargar datos recordados
-  window.onload = () => {
-    const recordado = localStorage.getItem("recordado");
-    if (recordado === "true") {
-      document.getElementById("correo").value = localStorage.getItem("correo") || "";
-      document.getElementById("clave").value = localStorage.getItem("clave") || "";
-      document.getElementById("recordar").checked = true;
-    }
-  };
 
-  function validarLogin(event) {
-    event.preventDefault();
 
-    const correo = document.getElementById("correo").value.trim();
-    const clave = document.getElementById("clave").value.trim();
-    const recordar = document.getElementById("recordar").checked;
-
-    if (correo === correoCorrecto && clave === claveCorrecta) {
-      if (recordar) {
-        localStorage.setItem("recordado", "true");
-        localStorage.setItem("correo", correo);
-        localStorage.setItem("clave", clave);
-      } else {
-        localStorage.removeItem("recordado");
-        localStorage.removeItem("correo");
-        localStorage.removeItem("clave");
-      }
-
-      alert("Inicio de sesión exitoso.");
-      window.location.href = "html/dashboard.php"; // Redirige al dashboard
-    } else {
-      alert("Correo o contraseña incorrectos.");
-    }
-
-    return false;
-  }
-</script>
-
-</body>
+  </body>
 </html>

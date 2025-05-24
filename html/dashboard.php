@@ -79,7 +79,7 @@ $mysqli->close();
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title> Dashboard -  | safegarden </title>
+    <title> Dashboard  | safegarden </title>
 
     <meta name="description" content="" />
 

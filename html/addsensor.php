@@ -1,23 +1,22 @@
 
 <?php
-session_start();
-
+session_start(); // NECESARIO para acceder a $_SESSION
+// Conexión a la base de datos
 include "conexion.php";
 
-$mysqli = new mysqli($servername, $username, $password, $dbname);
-if ($mysqli->connect_error) {
-    die('Error de conexión (' . $mysqli->connect_errno . '): ' . $mysqli->connect_error);
+// Crear conexión
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verificar conexión
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
 }
 
-$query = "SELECT temperatura, humedad, fecha FROM registros ORDER BY fecha DESC LIMIT 1";
-$result = $mysqli->query($query);
-$registro = $result->fetch_assoc();
-
-
+// Obtener ID del usuario actual desde sesión
+$id_usuario = $_SESSION['id_usuario'] ?? 0;
 
 
 ?>
-
 <!DOCTYPE html>
 <html
   lang="en"
@@ -205,19 +204,19 @@ $registro = $result->fetch_assoc();
           </a>
         </li>
 
-        <!-- registro sensosr -->
+        <!-- registro sensor -->
+       
         <li class="menu-item">
         <a href="addsensor.php" class="menu-link">
-        <i class="menu-icon tf-icons bx bx-arrow-out-left-square-half"></i> 
-        <div data-i18n="registrar sensor">Registrar sensor</div>
+        <i class="menu-icon tf-icons bx bx-plus-square"></i>
+        <div data-i18n="Añadir">Añadir sensor</div>
       </a>
     </li>
-
  
         <!-- Logout -->
         <li class="menu-item">
         <a href="logout.php" class="menu-link">
-        <i class="menu-icon tf-icons bx bx-log-out"></i> 
+        <i class="menu-icon tf-icons bx bx-log-out"></i>
         <div data-i18n="Logout">Cerrar sesión</div>
       </a>
     </li>
@@ -241,7 +240,11 @@ $registro = $result->fetch_assoc();
               </a>
             </div>
 
+            
+
             <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+
+             <h2 class="mb-2">Registrar Dispositivo LoRa</h2>
               
               <!-- /Search -->
 
@@ -249,6 +252,8 @@ $registro = $result->fetch_assoc();
                 <!-- Place this tag where you want the button to render. -->
                 <li class="nav-item lh-1 me-3">
                 </li>
+
+                
 
                 <!-- User -->
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
@@ -283,7 +288,7 @@ $registro = $result->fetch_assoc();
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="">
+                      <a class="dropdown-item" href="#">
                         <i class="bx bx-cog me-2"></i>
                         <span class="align-middle">Settings</span>
                       </a>
@@ -313,154 +318,81 @@ $registro = $result->fetch_assoc();
             </div>
           </nav>
 
+
           <!-- / Navbar -->
-           <div class="content-wrapper">
-            <!-- Content -->
 
-            
+          <div class="container">
+             <div class="mb-4"></div>
 
-            <div class="container-xxl flex-grow-1 container-p-y">
-              <div class="row">
 
-              <div class="card">
-                    <div class="d-flex align-items-end row">
-                      <div class="col-sm-7">
-                        <div class="card-body">
-                          <h5 class="card-title text-primary"> ¡Bienvenido a SafeGarden!🌱</h5>
-                          <p class="mb-4">
-                            Revisa los  datos de tus cultivos en timpo real.
-                          </p>
-                        </div>
-                      </div>
-                      <div class="col-sm-5 text-center text-sm-left">
-                        <div class="card-body pb-0 px-0 px-md-4">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                 <div class="container mt-4">
-  
-                 <div class="container mt-4">
-  <div class="row">
-  
-     <!-- Tarjeta Temperatura -->
-    <div class="col-md-4 mb-4">
-              <div class="card card-custom text-center">
-        <div class="card-body text-center">
-          <h5 class="card-title">🌡️ Temperatura</h5>
-          <p class="display-5"><?= $registro['temperatura'] ?> °C</p>
-          <p><small><?= $registro['fecha'] ?></small></p>
-        </div>
-      </div>
+
+          <form method="POST" class="card p-4 mb-5">
+    <div class="mb-3">
+        <label for="codigo_lora" class="form-label">Código único del Dispositivo</label>
+        <input type="text" name="codigo_lora" id="codigo_lora" class="form-control" placeholder="Ej: LORA123" required>
+        <small class="text-muted">Este código debe ser único. Evita duplicados.</small>
     </div>
 
-    <div class="col-md-4">
-              <div class="card card-custom text-center">
-        <div class="card-body text-center">
-          <h5 class="card-title">💧 Humedad</h5>
-          <p class="display-5"><?= $registro['humedad'] ?> %</p>
-          <p><small> <?= $registro['fecha'] ?></small></p>
-        </div>
-      </div>
+    <div class="mb-3">
+        <label for="descripcion_lora" class="form-label">Ubicación o nombre</label>
+        <input type="text" name="ubicacion" id="ubicacion" class="form-control" placeholder="Ej: Huerto A">
     </div>
-  
+
+    <button type="submit" name="registro_lora" class="btn btn-success">Agregar LoRa</button>
+</form>
 
 
-    <!-- Tarjeta: Detección de Animales -->
-      <div class="col-md-4">
-        <div class="card card-custom text-center">
-          <div class="card-body">
-            <div class="icon-container icon-animal mb-3">
-              <i class='bx bxs-paw'></i>
-            </div>
-            <h5 class="card-title">Detección de Animales</h5>
-            <p class="card-text fs-4">3 eventos</p>
-          </div>
-        </div>
-      </div>
-      </div>
+    <h2 class="mb-4">Registrar Sensor</h2>
+<form method="POST" class="card p-4">
+    <div class="mb-3">
+        <label for="id_lora" class="form-label">Dispositivo LoRa</label>
+        <select name="id_lora" id="id_lora" class="form-select" required>
+            <option value="" disabled selected>Seleccione un dispositivo</option>
+            <?php while ($row = $result_lora->fetch_assoc()): ?>
+                <option value="<?= $row['id_lora'] ?>"><?= $row['descripcion'] ?></option>
+            <?php endwhile; ?>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="tipo_sensor" class="form-label">Tipo de Sensor</label>
+        <input type="text" name="tipo_sensor" id="tipo_sensor" class="form-control" placeholder="Ej. DHT11, ultrasónico" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="descripcion" class="form-label">Ubicación / Función</label>
+        <input type="text" name="descripcion" id="descripcion" class="form-control" placeholder="Ej. Sensor en esquina norte del huerto">
+    </div>
+
+    <button type="submit" name="registrar_sensor" class="btn btn-primary">Agregar Sensor</button>
+</form>
+           
 </div>
-
-      <!-- Gráfico de barras -->
-    <div class="card card-custom mt-5">
-      <div class="card-body">
-        <h5 class="card-title">Historial de Datos</h5>
-        <canvas id="graficoDatos" height="100"></canvas>
-      </div>
-    </div>
-  </div>
- </div>
-
-
-  </div>
-</div>
-
-      
-  <script>
-function cargarDatosSensor() {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'obtenerDatos.php', true);
-
-  xhr.onload = function() {
-    if (xhr.status === 200) {
-      try {
-        var data = JSON.parse(xhr.responseText);
-        if (!data.error) {
-          document.getElementById('tempValor').textContent = data.temperatura + ' °C';
-          document.getElementById('humValor').textContent = data.humedad + ' %';
-        } else {
-          document.getElementById('tempValor').textContent = 'No disponible';
-          document.getElementById('humValor').textContent = 'No disponible';
-        }
-      } catch (e) {
-        console.error('Error al parsear JSON:', e);
-      }
-    } else {
-      console.error('Error en la petición AJAX: ' + xhr.status);
-    }
-  };
-
-  xhr.onerror = function() {
-    console.error('Error en la petición AJAX');
-  };
-
-  xhr.send();
-}
-
-// Ejecutar al cargar la página
-cargarDatosSensor();
-
-// Actualizar cada 10 segundos sin refrescar la página
-setInterval(cargarDatosSensor, 10000);
-</script>
-
-
 
 <script>
-const ctx = document.getElementById('graficoDatos').getContext('2d');
-let grafico = null;
+document.getElementById("formLora").addEventListener("submit", function(e) {
+    e.preventDefault();
 
-  fetch('obtenerDatos.php')
-    .then(response => response.json())
+    const formData = new FormData(this);
+
+    fetch("registro_lora.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
     .then(data => {
-      const fechas = data.fechas;
-      const temperaturas = data.temperaturas;
-      const humedades = data.humedades;
-
-      // Aquí puedes alimentar tus gráficos ApexCharts, por ejemplo
-      console.log(fechas, temperaturas, humedades);
-    });
-
-
-// Cargar inicialmente
-cargarDatos();
-
-// Actualizar cada 10 segundos
-setInterval(cargarDatos, 10000);
+        if (data.success) {
+            alert("LoRa y sensor registrados correctamente");
+        } else {
+            alert("Error: " + data.message);
+        }
+    })
+    .catch(err => console.error(err));
+});
 </script>
 
 
-
+  
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
@@ -468,9 +400,6 @@ setInterval(cargarDatos, 10000);
     <script src="../assets/vendor/libs/popper/popper.js"></script>
     <script src="../assets/vendor/js/bootstrap.js"></script>
     <script src="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script src="../assets/vendor/js/menu.js"></script>
     <!-- endbuild -->

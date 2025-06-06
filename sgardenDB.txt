@@ -69,3 +69,23 @@ CREATE TABLE registros (
   humedad FLOAT,
   fecha DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+
+CREATE TABLE Dispositivos_LoRa (
+  id_lora INT AUTO_INCREMENT PRIMARY KEY,
+  id_usuario INT NOT NULL,
+  nombre_dispositivo VARCHAR(100),
+  ubicacion VARCHAR(255),
+  fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
+);
+CREATE TABLE Sensores (
+  id_sensor INT AUTO_INCREMENT PRIMARY KEY,
+  id_lora INT NOT NULL,
+  tipo_sensor VARCHAR(50),
+  descripcion VARCHAR(255),
+  FOREIGN KEY (id_lora) REFERENCES Dispositivos_LoRa(id_lora)
+);
+
+ALTER TABLE Dispositivos_LoRa ADD COLUMN codigo_lora VARCHAR(100) NOT NULL;
+

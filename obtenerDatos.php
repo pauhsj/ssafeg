@@ -1,8 +1,10 @@
 <?php
-session_start();
 
-include "conexion.php";
-
+$servername = "localhost";
+$username = "u557447082_9x8vh";
+$password ="$afegarden_bm9F8>y";
+$dbname = "u557447082_safegardedb";
+$conexion = new mysqli($servername, $username, $password, $dbname);
 
 if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
     header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);

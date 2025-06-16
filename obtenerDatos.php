@@ -1,8 +1,14 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "120994knj";
-$dbname = "safegardendb_local";
+session_start();
+
+include "conexion.php";
+
+
+if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+    header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+    exit;
+} 
+
 
 // Obtener los datos desde la URL
 $temperatura = $_GET['temperatura'] ?? null;
@@ -16,6 +22,8 @@ if ($temperatura !== null && $humedad !== null) {
     if ($conexion->connect_error) {
         die("Conexión fallida: " . $conexion->connect_error);
     }
+
+
 
     // Insertar datos
     $sql = "INSERT INTO registros (temperatura, humedad, fecha) VALUES ('$temperatura', '$humedad', NOW())";

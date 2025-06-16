@@ -1,8 +1,8 @@
 <?php 
 $servername = "localhost";
-$username = "root";
-$password ="120994knj";
-$dbname = "safegardendb_local";
+$username = "u557447082_9x8vh";
+$password ="$afegarden_bm9F8>y";
+$dbname = "u557447082_safegardedb";
 $conexion = new mysqli($servername, $username, $password, $dbname);
 
 

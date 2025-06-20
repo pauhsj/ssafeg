@@ -4,15 +4,10 @@ $username = "u557447082_9x8vh";
 $password = '$afegarden_bm9F8>y';
 $dbname = "u557447082_safegardedb";
 
-
-// Crear conexión
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Verificar conexión
-if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
+$mysqli = new mysqli($servername, $username, $password, $dbname);
+if ($mysqli->connect_error) {
+    die('Error de conexión (' . $mysqli->connect_errno . '): ' . $mysqli->connect_error);
 }
-
 
 
 // Recibir datos

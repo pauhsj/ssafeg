@@ -9,7 +9,6 @@ if ($mysqli->connect_error) {
     die('Error de conexión (' . $mysqli->connect_errno . '): ' . $mysqli->connect_error);
 }
 
-
 // Recibir datos
 $nombre = $_POST['nombre'] ?? '';
 $email = $_POST['email'] ?? '';
@@ -30,14 +29,8 @@ if ($stmt->execute()) {
     echo "Error al registrar: " . $stmt->error;
 }
 
-$stmt->close();
-$conn->close();
+
 ?>
-
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="es">

@@ -12,8 +12,7 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
-// Obtener ID del usuario actual desde sesión
-$id_usuario = $_SESSION['id_usuario'] ?? 0;
+
 
 
 // Recibir datos

@@ -202,7 +202,7 @@ try {
       <button type="submit" class="login-btn">Iniciar sesión</button>
 
       <div class="register">
-        <p>¿No tienes cuenta? <a href="login2.html">Regístrate</a></p>
+        <p>¿No tienes cuenta? <a href="registrouser.php">Regístrate</a></p>
       </div>
     </form>
   </div>

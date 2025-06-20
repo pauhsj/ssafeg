@@ -1,8 +1,10 @@
 
 <?php
-session_start(); // NECESARIO para acceder a $_SESSION
-// Conexión a la base de datos
-include "conexion.php";
+$servername = "localhost";
+$username = "u557447082_9x8vh";
+$password = '$afegarden_bm9F8>y';
+$dbname = "u557447082_safegardedb";
+
 
 // Crear conexión
 $conn = new mysqli($servername, $username, $password, $dbname);

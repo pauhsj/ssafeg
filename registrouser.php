@@ -1,9 +1,28 @@
+<?php
+$servername = "localhost";
+$username = "u557447082_9x8vh";
+$password = '$afegarden_bm9F8>y';
+$dbname = "u557447082_safegardedb";
+
+
+// Crear conexión
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verificar conexión
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
+}
+
+// Obtener ID del usuario actual desde sesión
+$id_usuario = $_SESSION['id_usuario'] ?? 0;
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Cuenta - EcoGarden</title>
+    <title>Crear Cuenta - SafeGarden</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         * {
@@ -145,11 +164,6 @@
             
             <input type="email" placeholder="Tu correo electrónico" required>
             <input type="password" placeholder="Contraseña" required>
-
-            <div class="checkbox-group">
-                <input type="checkbox" id="terms" required>
-                <label for="terms">Acepto la Política de Seguridad y Privacidad de Sewo</label>
-            </div>
 
             <button type="submit" class="register-btn">Comenzar</button>
 

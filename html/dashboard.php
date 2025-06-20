@@ -327,7 +327,7 @@ $registro = $result->fetch_assoc();
                     <div class="d-flex align-items-end row">
                       <div class="col-sm-7">
                         <div class="card-body">
-                          <h5 class="card-title text-primary"> ¡Bienvenido a SafeGarden!🌱</h5>
+                          <h5 class="card-title text-primary"> ¡Bienvenido a SafeGarden!</h5>
                           <p class="mb-4">
                             Revisa los  datos de tus cultivos en timpo real.
                           </p>
@@ -348,7 +348,7 @@ $registro = $result->fetch_assoc();
     <div class="col-md-4 mb-4">
               <div class="card card-custom text-center">
         <div class="card-body text-center">
-          <h5 class="card-title">🌡️ Temperatura</h5>
+          <h5 class="card-title">Temperatura</h5>
           <p class="display-5"><?= $registro['temperatura'] ?> °C</p>
           <p><small><?= $registro['fecha'] ?></small></p>
         </div>
@@ -358,7 +358,7 @@ $registro = $result->fetch_assoc();
     <div class="col-md-4">
               <div class="card card-custom text-center">
         <div class="card-body text-center">
-          <h5 class="card-title">💧 Humedad</h5>
+          <h5 class="card-title">Humedad</h5>
           <p class="display-5"><?= $registro['humedad'] ?> %</p>
           <p><small> <?= $registro['fecha'] ?></small></p>
         </div>

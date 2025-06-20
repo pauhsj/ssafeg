@@ -1,9 +1,9 @@
 <?php
 
-$host = "localhost";
-$username = "root";
-$password = "120994knj";
-$dbname = "safegardendb_local";
+$servername = "localhost";
+$username = "u557447082_9x8vh";
+$password = '$afegarden_bm9F8>y';
+$dbname = "u557447082_safegardedb";
 
 try {
     $conexion = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);

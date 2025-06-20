@@ -12,10 +12,38 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
-
 // Obtener ID del usuario actual desde sesión
 $id_usuario = $_SESSION['id_usuario'] ?? 0;
+
+
+// Recibir datos
+$nombre = $_POST['nombre'] ?? '';
+$email = $_POST['email'] ?? '';
+$telefono = $_POST['telefono'] ?? '';
+$direccion = $_POST['direccion'] ?? '';
+
+// Insertar
+$sql = "INSERT INTO usuarios (nombre, email, telefono, direccion, creado_en)
+        VALUES (?, ?, ?, ?, NOW())";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ssss", $nombre, $email, $telefono, $direccion);
+
+if ($stmt->execute()) {
+    
+ header("Location: login.php");   
+} else {
+    echo "Error al registrar: " . $stmt->error;
+}
+
+$stmt->close();
+$conn->close();
 ?>
+
+
+
+
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -156,21 +184,22 @@ $id_usuario = $_SESSION['id_usuario'] ?? 0;
     </div>
 
     <div class="right-side">
-        <form class="register-form">
-            <h2>Crea tu cuenta gratuita</h2>
-            <p>Ingresa tus datos para registrarte</p>
+        <form class="register-form" method="POST" action="registro.php">
+    <h2>Crea tu cuenta gratuita</h2>
+    <p>Ingresa tus datos para registrarte</p>
 
-            <input type="text" placeholder="Nombre completo" required>
-            
-            <input type="email" placeholder="Tu correo electrónico" required>
-            <input type="password" placeholder="Contraseña" required>
+    <input type="text" name="nombre" placeholder="Nombre completo" required>
+    <input type="email" name="email" placeholder="Tu correo electrónico" required>
+    <input type="text" name="telefono" placeholder="Teléfono" required>
+    <input type="text" name="direccion" placeholder="Dirección" required>
+    
+    <button type="submit" class="register-btn">Comenzar</button>
 
-            <button type="submit" class="register-btn">Comenzar</button>
+    <div class="login-link">
+        <p>¿Ya tienes una cuenta? <a href="login.php">Iniciar sesión</a></p>
+    </div>
+</form>
 
-            <div class="login-link">
-                <p>¿Ya tienes una cuenta? <a href="login.php">Iniciar sesión</a></p>
-            </div>
-        </form>
     </div>
 </div>
 

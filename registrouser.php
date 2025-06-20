@@ -1,35 +1,42 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 $servername = "localhost";
-$username = "u557447082_9x8vh";
-$password = '$afegarden_bm9F8>y';
-$dbname = "u557447082_safegardedb";
+$username   = "u557447082_9x8vh";
+$password   = '$afegarden_bm9F8>y';
+$dbname     = "u557447082_safegardedb";
 
-$mysqli = new mysqli($servername, $username, $password, $dbname);
-if ($mysqli->connect_error) {
-    die('Error de conexión (' . $mysqli->connect_errno . '): ' . $mysqli->connect_error);
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+  die("Conexión fallida: " . $conn->connect_error);
 }
 
-// Recibir datos
-$nombre = $_POST['nombre'] ?? '';
-$email = $_POST['email'] ?? '';
-$telefono = $_POST['telefono'] ?? '';
-$direccion = $_POST['direccion'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $nombre    = $_POST['nombre']    ?? '';
+  $email     = $_POST['email']     ?? '';
+  $telefono  = $_POST['telefono']  ?? '';
+  $direccion = $_POST['direccion'] ?? '';
 
-// Insertar
-$sql = "INSERT INTO usuarios (nombre, email, telefono, direccion, creado_en)
-        VALUES (?, ?, ?, ?, NOW())";
+  $stmt = $conn->prepare(
+    "INSERT INTO usuarios (nombre, email, telefono, direccion, creado_en)
+     VALUES (?, ?, ?, ?, NOW())"
+  );
+  if (!$stmt) {
+    die("Error en prepare(): " . $conn->error);
+  }
 
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("ssss", $nombre, $email, $telefono, $direccion);
+  $stmt->bind_param("ssss", $nombre, $email, $telefono, $direccion);
+  if (!$stmt->execute()) {
+    die("Error al ejecutar execute(): " . $stmt->error);
+  }
 
-if ($stmt->execute()) {
-    
- header("Location: login.php");   
+  echo "Usuario creado correctamente.";
+  // header("Location: login.php"); exit;
 } else {
-    echo "Error al registrar: " . $stmt->error;
+  echo "Acceso no permitido.";
 }
-
-
 ?>
 
 <!DOCTYPE html>

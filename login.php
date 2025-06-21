@@ -10,19 +10,19 @@ try {
     $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Traer todos los usuarios
-    $usuarios = $conexion->query("SELECT id_cliente, password FROM usuario")->fetchAll(PDO::FETCH_ASSOC);
+    $usuarios = $conexion->query("SELECT id_cliente, contraseña FROM usuario")->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($usuarios as $usuario) {
         $id = $usuario['id_cliente'];
-        $clave = $usuario['password'];
+        $clave = $usuario['contraseña'];
 
         // Verificamos si la contraseña ya está encriptada
-        if (!password_get_info($clave)['algo']) {
+        if (!contraseña_get_info($clave)['algo']) {
             // Encriptar
-            $hash = password_hash($clave, PASSWORD_DEFAULT);
+            $hash = contraseña_hash($clave, CONTRASEÑA_DEFAULT);
             
             // Actualizar en la base de datos
-            $stmt = $conexion->prepare("UPDATE usuario SET password = :hash WHERE id_cliente = :id");
+            $stmt = $conexion->prepare("UPDATE usuario SET contraseña = :hash WHERE id_cliente = :id");
             $stmt->execute([
                 ':hash' => $hash,
                 ':id' => $id
@@ -192,7 +192,7 @@ try {
       <p>Inicia sesión en tu cuenta</p>
 
       <input type="email" id="correo" name="correo" placeholder="Tu correo electrónico" required>
-      <input type="password" id="clave" name="clave" placeholder="Contraseña" required>
+      <input type="contraseña" id="clave" name="clave" placeholder="Contraseña" required>
 
       <div class="options">
         <label><input type="checkbox" id="recordar"> Recuérdame</label>

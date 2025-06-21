@@ -14,20 +14,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $email     = $_POST['email']     ?? '';
   $contraseña  = $_POST['contraseña']  ?? '';
   $telefono  = $_POST['telefono']  ?? '';
-  $direccion = $_POST['direccion'] ?? '';
+  $ciudad = $_POST['ciudad'] ?? '';
 
   $stmt = $conn->prepare(
-    "INSERT INTO usuarios (nombre, email, conraseña,  telefono, direccion, creado_en)
-     VALUES (?, ?, ?, ?, NOW())"
-  );
-  if (!$stmt) {
-    die("Error en prepare(): " . $conn->error);
-  }
+  "INSERT INTO usuarios (nombre, email, contraseña, telefono, ciudad, creado_en)
+   VALUES (?, ?, ?, ?, ?, NOW())"
+);
 
-  $stmt->bind_param("ssss", $nombre, $email, $contraseña, $telefono, $direccion);
-  if (!$stmt->execute()) {
-    die("Error al ejecutar execute(): " . $stmt->error);
-  }
+if (!$stmt) {
+  die("Error en prepare(): " . $conn->error);
+}
+
+$stmt->bind_param("sssss", $nombre, $email, $contraseña, $telefono, $ciudad);
+
 
    header("Location: login.php"); exit;
 } else {
@@ -174,7 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <div class="right-side">
-        <form class="register-form" method="POST" action="login.php">
+        <form class="register-form" method="POST" action="">
     <h2>Crea tu cuenta gratuita</h2>
     <p>Ingresa tus datos para registrarte</p>
 
@@ -182,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <input type="email" name="email" placeholder="Tu correo electrónico" required>
     <input type="text" name="contraseña" placeholder="contraseña" required>
     <input type="text" name="telefono" placeholder="Teléfono" required>
-    <input type="text" name="direccion" placeholder="Dirección" required>
+    <input type="text" name="ciudad" placeholder="ciudad" required>
     
     <button type="submit" class="register-btn">Comenzar</button>
 

@@ -174,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <div class="right-side">
-        <form class="register-form" method="POST" action="registro.php">
+        <form class="register-form" method="POST" action="login.php">
     <h2>Crea tu cuenta gratuita</h2>
     <p>Ingresa tus datos para registrarte</p>
 

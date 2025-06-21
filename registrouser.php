@@ -12,24 +12,24 @@ if ($conn->connect_error) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $nombre    = $_POST['nombre']    ?? '';
   $email     = $_POST['email']     ?? '';
+  $contraseña  = $_POST['contraseña']  ?? '';
   $telefono  = $_POST['telefono']  ?? '';
   $direccion = $_POST['direccion'] ?? '';
 
   $stmt = $conn->prepare(
-    "INSERT INTO usuarios (nombre, email, telefono, direccion, creado_en)
+    "INSERT INTO usuarios (nombre, email, conraseña,  telefono, direccion, creado_en)
      VALUES (?, ?, ?, ?, NOW())"
   );
   if (!$stmt) {
     die("Error en prepare(): " . $conn->error);
   }
 
-  $stmt->bind_param("ssss", $nombre, $email, $telefono, $direccion);
+  $stmt->bind_param("ssss", $nombre, $email, $contraseña, $telefono, $direccion);
   if (!$stmt->execute()) {
     die("Error al ejecutar execute(): " . $stmt->error);
   }
 
-  echo "Usuario creado correctamente.";
-  // header("Location: login.php"); exit;
+   header("Location: login.php"); exit;
 } else {
   echo "Acceso no permitido.";
 }
@@ -180,6 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <input type="text" name="nombre" placeholder="Nombre completo" required>
     <input type="email" name="email" placeholder="Tu correo electrónico" required>
+    <input type="text" name="contraseña" placeholder="contraseña" required>
     <input type="text" name="telefono" placeholder="Teléfono" required>
     <input type="text" name="direccion" placeholder="Dirección" required>
     

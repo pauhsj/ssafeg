@@ -196,23 +196,27 @@ $conn->close();
     <img src="https://media.istockphoto.com/id/146766798/es/foto/grass-field.jpg?s=612x612&w=0&k=20&c=LN9-h7W1eQpfsD_HCY-dMM2nvekSeFZUk54CqIQoLB0=" alt="Imagen de jardín">
   </div>
 
-  <div class="right-side">
-<?php if (!empty($error)) echo "<p style='color:red;'>$error</p>"; ?>
+<form class="login-form" action="html/dashboard.php" method="POST"> <h2>¡Bienvenido de nuevo a SafeGarden!</h2>
+      <p>Inicia sesión en tu cuenta</p>
 
-    <form method="POST" action="login.php">
-        <label for="correo">Correo:</label><br>
-        <input type="email" name="correo" required><br><br>
+      <?php if (!empty($error)) echo "<p style='color:red;'>$error</p>"; ?>
+
+      <input type="email" name="correo" required><br><br>
 
         <label for="clave">Contraseña:</label><br>
         <input type="text" name="clave" required><br><br>
 
-        <button type="submit">Entrar</button>
+      <div class="options">
+        <label><input type="checkbox" id="recordar"> Recuérdame</label>
+        <a href="login3.html">¿Olvidaste tu contraseña?</a>
+      </div>
+
+      <button type="submit" class="login-btn">Iniciar sesión</button>
+
+      <div class="register">
+        <p>¿No tienes cuenta? <a href="registrouser.php">Regístrate</a></p>
+      </div>
     </form>
-  </div>
-</div>
-
-
-
 
   </body>
 </html>

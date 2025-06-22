@@ -194,6 +194,8 @@ $conn->close();
     <h1>Cuida tu jardín como cuidas de ti</h1>
     <img src="https://media.istockphoto.com/id/146766798/es/foto/grass-field.jpg?s=612x612&w=0&k=20&c=LN9-h7W1eQpfsD_HCY-dMM2nvekSeFZUk54CqIQoLB0=" alt="Imagen de jardín">
   </div>
+
+  
 <form class="login-form" action="html/dashboard.php" method="POST"> <h2>¡Bienvenido de nuevo a SafeGarden!</h2>
       <p>Inicia sesión en tu cuenta</p>
 
@@ -215,6 +217,6 @@ $conn->close();
         <p>¿No tienes cuenta? <a href="registrouser.php">Regístrate</a></p>
       </div>
     </form>
-
+ </div>
   </body>
 </html>

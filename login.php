@@ -190,10 +190,6 @@ $conn->close();
 <div class="container">
   <div class="card">
     <div class="card-content">
-      <div class="left">
-        <img src="https://media.istockphoto.com/id/146766798/es/foto/grass-field.jpg?s=612x612" alt="Jardín">
-        <h1>Cuida tu jardín como cuidas de ti</h1>
-      </div>
 
       <div class="right">
         <form class="form" method="POST" action="login.php">

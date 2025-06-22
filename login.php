@@ -50,93 +50,87 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $conn->close();
 ?>
 
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> Iniciar Sesión | SafeGarden</title>
-
-  <meta name="description" content="" />
-
-  <link rel="icon" type="image/x-icon" href="../assets/img/favicon/logoSG.png" />
-
+  <title>Iniciar Sesión | SafeGarden</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Arial', sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
 
-    body, html {
-      height: 100%;
-    }
+    body, html { height: 100%; background: #e8f5e9; }
 
     .container {
-      display: flex;
-      height: 100vh;
-    }
-
-    .left-side {
-      flex: 1;
-      background-color: #f7f7f7;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 40px;
-      text-align: center;
+      min-height: 100vh;
+      padding: 20px;
     }
 
-    .left-side img {
-      width: 100%;
-      max-width: 400px;
-      border-radius: 10px;
-      margin-top: 20px;
-    }
-
-    .left-side h1 {
-      font-size: 32px;
-      margin-bottom: 10px;
-    }
-
-    .left-side p {
-      font-size: 16px;
-      color: #666;
-      margin-bottom: 20px;
-    }
-
-    .right-side {
-      flex: 1;
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
       display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 900px;
+      overflow: hidden;
+    }
+
+    .card-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (min-width: 768px) {
+      .card-content { flex-direction: row; }
+    }
+
+    .left {
+      flex: 1;
+      background-color: #dcedc8;
+      display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      background-color: #fff;
+      padding: 30px;
     }
 
-    .login-form {
+    .left img {
       width: 100%;
-      max-width: 350px;
-    }
-
-    .login-form h2 {
-      margin-bottom: 10px;
-      font-size: 28px;
-      text-align: center;
-    }
-
-    .login-form p {
+      max-width: 300px;
+      border-radius: 10px;
       margin-bottom: 20px;
-      color: #777;
-      text-align: center;
-      font-size: 14px;
     }
 
-    .login-form input[type="email"],
-    .login-form input[type="password"] {
+    .left h1 {
+      font-size: 26px;
+      color: #2e7d32;
+    }
+
+    .right {
+      flex: 1;
+      padding: 40px;
+    }
+
+    .right h2 {
+      font-size: 24px;
+      color: #2e7d32;
+      margin-bottom: 10px;
+    }
+
+    .right p {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .form input {
       width: 100%;
       padding: 12px;
       margin-bottom: 15px;
@@ -144,79 +138,88 @@ $conn->close();
       border-radius: 6px;
     }
 
-    .login-form .options {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-
-    .login-form .options label {
-      display: flex;
-      align-items: center;
-      font-size: 14px;
-    }
-
-    .login-form .options a {
-      font-size: 14px;
-      color: #467e48;
-      text-decoration: none;
-    }
-
-    .login-form button.login-btn {
+    .form button {
       width: 100%;
       padding: 12px;
-      background-color: #366738;
+      background-color: #388e3c;
       color: #fff;
       border: none;
       border-radius: 6px;
       font-size: 16px;
       cursor: pointer;
-      margin-bottom: 15px;
+      transition: background 0.3s ease;
+    }
+
+    .form button:hover {
+      background-color: #2e7d32;
+    }
+
+    .options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .options a {
+      color: #388e3c;
+      text-decoration: none;
     }
 
     .register {
       text-align: center;
-      margin-top: 10px;
       font-size: 14px;
+      margin-top: 10px;
     }
 
     .register a {
-      color: #3c7b3e;
+      color: #388e3c;
       text-decoration: none;
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <div class="left-side">
-    <h1>Cuida tu jardín como cuidas de ti</h1>
-    <img src="https://media.istockphoto.com/id/146766798/es/foto/grass-field.jpg?s=612x612&w=0&k=20&c=LN9-h7W1eQpfsD_HCY-dMM2nvekSeFZUk54CqIQoLB0=" alt="Imagen de jardín">
+  <div class="card">
+    <div class="card-content">
+      <div class="left">
+        <img src="https://media.istockphoto.com/id/146766798/es/foto/grass-field.jpg?s=612x612" alt="Jardín">
+        <h1>Cuida tu jardín como cuidas de ti</h1>
+      </div>
+
+      <div class="right">
+        <form class="form" method="POST" action="login.php">
+          <h2>¡Bienvenido de nuevo a SafeGarden!</h2>
+          <p>Inicia sesión en tu cuenta</p>
+
+          <?php if (!empty($error)) echo "<p class='error'>$error</p>"; ?>
+
+          <input type="email" name="correo" placeholder="Tu correo electrónico" required>
+          <input type="password" name="clave" placeholder="Contraseña" required>
+
+          <div class="options">
+            <label><input type="checkbox"> Recuérdame</label>
+            <a href="#">¿Olvidaste tu contraseña?</a>
+          </div>
+
+          <button type="submit">Iniciar sesión</button>
+
+          <div class="register">
+            <p>¿No tienes cuenta? <a href="registrouser.php">Regístrate</a></p>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
+</div>
 
-  
-<form class="login-form" action="html/dashboard.php" method="POST"> <h2>¡Bienvenido de nuevo a SafeGarden!</h2>
-      <p>Inicia sesión en tu cuenta</p>
-
-      <?php if (!empty($error)) echo "<p style='color:red;'>$error</p>"; ?>
-
-      <input type="email" name="correo" required><br><br>
-
-        <label for="clave">Contraseña:</label><br>
-        <input type="text" name="clave" required><br><br>
-
-      <div class="options">
-        <label><input type="checkbox" id="recordar"> Recuérdame</label>
-        <a href="login3.html">¿Olvidaste tu contraseña?</a>
-      </div>
-
-      <button type="submit" class="login-btn">Iniciar sesión</button>
-
-      <div class="register">
-        <p>¿No tienes cuenta? <a href="registrouser.php">Regístrate</a></p>
-      </div>
-    </form>
- </div>
-  </body>
+</body>
 </html>

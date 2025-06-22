@@ -1,44 +1,53 @@
 <?php
+session_start();
 
+// Conexión a la base de datos
 $servername = "localhost";
-$username = "u557447082_9x8vh";
-$password = '$afegarden_bm9F8>y';
-$dbname = "u557447082_safegardedb";
+$username   = "u557447082_9x8vh";
+$password   = '$afegarden_bm9F8>y';
+$dbname     = "u557447082_safegardedb";
 
-try {
-    $conexion = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // Traer todos los usuarios
-    $usuarios = $conexion->query("SELECT id_cliente, contraseña FROM usuario")->fetchAll(PDO::FETCH_ASSOC);
-
-    foreach ($usuarios as $usuario) {
-        $id = $usuario['id_cliente'];
-        $clave = $usuario['contraseña'];
-
-        // Verificamos si la contraseña ya está encriptada
-        if (!contraseña_get_info($clave)['algo']) {
-            // Encriptar
-            $hash = contraseña_hash($clave, CONTRASEÑA_DEFAULT);
-            
-            // Actualizar en la base de datos
-            $stmt = $conexion->prepare("UPDATE usuario SET contraseña = :hash WHERE id_cliente = :id");
-            $stmt->execute([
-                ':hash' => $hash,
-                ':id' => $id
-            ]);
-
-            
-        } else {
-        }
-    }
-
-    
-} catch (PDOException $e) {
-    echo "❌ Error de conexión: " . $e->getMessage();
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
 }
 
+// Verificar si se envió el formulario
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_POST['correo'] ?? '';
+    $clave = $_POST['clave'] ?? '';
 
+    // Buscar el usuario por correo
+    $sql = "SELECT * FROM usuario WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+
+    if ($stmt->execute()) {
+        $resultado = $stmt->get_result();
+
+        if ($resultado->num_rows === 1) {
+            $usuario = $resultado->fetch_assoc();
+
+            // Comparar contraseñas (sin hash)
+            if ($usuario['contraseña'] === $clave) {
+                $_SESSION['id_usuario'] = $usuario['id_cliente'];
+                $_SESSION['nombre'] = $usuario['nombre'];
+                header("Location: html/dashboard.php");
+                exit;
+            } else {
+                $error = "Contraseña incorrecta.";
+            }
+        } else {
+            $error = "Correo no registrado.";
+        }
+    } else {
+        $error = "Error en la consulta.";
+    }
+
+    $stmt->close();
+}
+
+$conn->close();
 ?>
 
 
@@ -188,22 +197,16 @@ try {
   </div>
 
   <div class="right-side">
-<form class="login-form" action="html/dashboard.php" method="POST"> <h2>¡Bienvenido de nuevo a SafeGarden!</h2>
-      <p>Inicia sesión en tu cuenta</p>
+<?php if (!empty($error)) echo "<p style='color:red;'>$error</p>"; ?>
 
-      <input type="email" id="correo" name="correo" placeholder="Tu correo electrónico" required>
-      <input type="contraseña" id="clave" name="clave" placeholder="Contraseña" required>
+    <form method="POST" action="login.php">
+        <label for="correo">Correo:</label><br>
+        <input type="email" name="correo" required><br><br>
 
-      <div class="options">
-        <label><input type="checkbox" id="recordar"> Recuérdame</label>
-        <a href="login3.html">¿Olvidaste tu contraseña?</a>
-      </div>
+        <label for="clave">Contraseña:</label><br>
+        <input type="text" name="clave" required><br><br>
 
-      <button type="submit" class="login-btn">Iniciar sesión</button>
-
-      <div class="register">
-        <p>¿No tienes cuenta? <a href="registrouser.php">Regístrate</a></p>
-      </div>
+        <button type="submit">Entrar</button>
     </form>
   </div>
 </div>

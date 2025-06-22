@@ -169,7 +169,7 @@ $stmt->bind_param("sssss", $nombre, $email, $contraseña, $telefono, $ciudad);
     <div class="left-side">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyqTieVYbildQV61aIF0sawJOBRSzflKWFSw&s" alt="Herramientas de jardín">
         <h1>Cuida tu jardín como cuidas de ti</h1>
-        <p>Protege con solo unos clics.</p>
+        <p>Protege con solo unos clicks.</p>
     </div>
 
     <div class="right-side">

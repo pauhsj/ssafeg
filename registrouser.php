@@ -166,7 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h1>Cuida tu jardín como cuidas de ti</h1>
       </div>
       <div class="right">
-        <form class="form" method="POST" action="">
+        <form class="form" method="POST" action="registrouser.php">
           <h2>Crea tu cuenta gratuita</h2>
           <p>Ingresa tus datos para registrarte</p>
 

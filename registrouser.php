@@ -4,194 +4,186 @@ $username   = "u557447082_9x8vh";
 $password   = '$afegarden_bm9F8>y';
 $dbname     = "u557447082_safegardedb";
 
+// Crear conexión
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
   die("Conexión fallida: " . $conn->connect_error);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $nombre    = $_POST['nombre']    ?? '';
-  $email     = $_POST['email']     ?? '';
-  $contraseña  = $_POST['contraseña']  ?? '';
-  $telefono  = $_POST['telefono']  ?? '';
-  $ciudad = $_POST['ciudad'] ?? '';
+  $nombre     = $_POST['nombre'] ?? '';
+  $email      = $_POST['email'] ?? '';
+  $contraseña = $_POST['contraseña'] ?? '';
+  $telefono   = $_POST['telefono'] ?? '';
+  $ciudad     = $_POST['ciudad'] ?? '';
 
-  $stmt = $conn->prepare(
-  "INSERT INTO usuarios (nombre, email, contraseña, telefono, ciudad, creado_en)
-   VALUES (?, ?, ?, ?, ?, NOW())"
-);
+  $stmt = $conn->prepare("INSERT INTO usuario (nombre, email, contraseña, telefono, ciudad, creado_en) VALUES (?, ?, ?, ?, ?, NOW())");
 
-if (!$stmt) {
-  die("Error en prepare(): " . $conn->error);
-}
+  if (!$stmt) {
+    die("Error en prepare(): " . $conn->error);
+  }
 
-$stmt->bind_param("sssss", $nombre, $email, $contraseña, $telefono, $ciudad);
+  $stmt->bind_param("sssss", $nombre, $email, $contraseña, $telefono, $ciudad);
 
-
-   header("Location: login.php"); exit;
-} else {
-  echo "Acceso no permitido.";
+  if ($stmt->execute()) {
+    header("Location: login.php");
+    exit;
+  } else {
+    echo "Error al registrar: " . $stmt->error;
+  }
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Cuenta - SafeGarden</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registrarse | SafeGarden</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
 
-        body, html {
-            height: 100%;
-        }
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #f1f8e9;
+    }
 
-        .container {
-            display: flex;
-            height: 100vh;
-        }
+    .container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 20px;
+      justify-content: center;
+      align-items: center;
+    }
 
-        .left-side {
-            flex: 1;
-            background-color: #f7f7f7;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
-            text-align: center;
-        }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
 
-        .left-side img {
-            width: 100%;
-            max-width: 400px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
+    @media (min-width: 768px) {
+      .card {
+        flex-direction: row;
+      }
+    }
 
-        .left-side h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
+    .left {
+      background-color: #dcedc8;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+      text-align: center;
+    }
 
-        .left-side p {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 20px;
-        }
+    .left img {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
 
-        .right-side {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #fff;
-        }
+    .left h1 {
+      font-size: 26px;
+      color: #33691e;
+    }
 
-        .register-form {
-            width: 100%;
-            max-width: 350px;
-        }
+    .right {
+      flex: 1;
+      padding: 40px;
+    }
 
-        .register-form h2 {
-            margin-bottom: 10px;
-            font-size: 28px;
-            text-align: center;
-        }
+    .form h2 {
+      font-size: 24px;
+      color: #2e7d32;
+      margin-bottom: 10px;
+      text-align: center;
+    }
 
-        .register-form p {
-            margin-bottom: 20px;
-            color: #777;
-            text-align: center;
-            font-size: 14px;
-        }
+    .form p {
+      color: #666;
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
 
-        .register-form input[type="text"],
-        .register-form input[type="email"],
-        .register-form input[type="password"],
-        .register-form select {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
+    .form input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
 
-        .register-form .checkbox-group {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
+    .form button {
+      width: 100%;
+      padding: 12px;
+      background-color: #388e3c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
 
-        .register-form .checkbox-group input[type="checkbox"] {
-            margin-right: 8px;
-        }
+    .form button:hover {
+      background-color: #2e7d32;
+    }
 
-        .register-form .checkbox-group a {
-            color: #467e48;
-            text-decoration: none;
-        }
+    .form .login-link {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+    }
 
-        .register-form button.register-btn {
-            width: 100%;
-            padding: 12px;
-            background-color: #366738;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-
-        .login-link {
-            text-align: center;
-            font-size: 14px;
-        }
-
-        .login-link a {
-            color: #467e48;
-            text-decoration: none;
-        }
-    </style>
+    .form .login-link a {
+      color: #2e7d32;
+      text-decoration: none;
+    }
+  </style>
 </head>
 <body>
-    
-<div class="container">
-    <div class="left-side">
+  <div class="container">
+    <div class="card">
+      <div class="left">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyqTieVYbildQV61aIF0sawJOBRSzflKWFSw&s" alt="Herramientas de jardín">
         <h1>Cuida tu jardín como cuidas de ti</h1>
-        <p>Protege con solo unos clicks.</p>
+      </div>
+      <div class="right">
+        <form class="form" method="POST" action="">
+          <h2>Crea tu cuenta gratuita</h2>
+          <p>Ingresa tus datos para registrarte</p>
+
+          <input type="text" name="nombre" placeholder="Nombre completo" required />
+          <input type="email" name="email" placeholder="Correo electrónico" required />
+          <input type="password" name="contraseña" placeholder="Contraseña" required />
+          <input type="text" name="telefono" placeholder="Teléfono" required />
+          <input type="text" name="ciudad" placeholder="Ciudad" required />
+
+          <button type="submit">Registrarme</button>
+
+          <div class="login-link">
+            <p>¿Ya tienes una cuenta? <a href="login.php">Iniciar sesión</a></p>
+          </div>
+        </form>
+      </div>
     </div>
-
-    <div class="right-side">
-        <form class="register-form" method="POST" action="">
-    <h2>Crea tu cuenta gratuita</h2>
-    <p>Ingresa tus datos para registrarte</p>
-
-    <input type="text" name="nombre" placeholder="Nombre completo" required>
-    <input type="email" name="email" placeholder="Tu correo electrónico" required>
-    <input type="text" name="contraseña" placeholder="contraseña" required>
-    <input type="text" name="telefono" placeholder="Teléfono" required>
-    <input type="text" name="ciudad" placeholder="ciudad" required>
-    
-    <button type="submit" class="register-btn">Comenzar</button>
-
-    <div class="login-link">
-        <p>¿Ya tienes una cuenta? <a href="login.php">Iniciar sesión</a></p>
-    </div>
-</form>
-
-    </div>
-</div>
-
+  </div>
 </body>
 </html>

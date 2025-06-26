@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username = "u557447082_9x8vh";
 $password = '$afegarden_bm9F8>y';
-$dbname = "u557447082_safegardedb";
+$dbname = "u557447082_safegardendb";
 
 $id_sensor = $_GET['id_sensor'] ?? null;
 $evento = $_GET['evento'] ?? null;

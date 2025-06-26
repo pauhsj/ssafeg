@@ -89,3 +89,10 @@ CREATE TABLE Sensores (
 
 ALTER TABLE Dispositivos_LoRa ADD COLUMN codigo_lora VARCHAR(100) NOT NULL;
 
+ALTER TABLE usuario MODIFY contraseña VARCHAR(255);
+ALTER TABLE usuario CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE TABLE sensor_movimiento (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    movimiento TINYINT(1) NOT NULL,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP
+);

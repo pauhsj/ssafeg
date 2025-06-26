@@ -3,65 +3,62 @@ session_start();
 
 // Conexión a la base de datos
 $servername = "localhost";
-$username   = "u557447082_9x8vh";
-$password   = '$afegarden_bm9F8>y';
-$dbname     = "u557447082_safegardedb";
+$username = "u557447082_9x8vh";
+$password ='$afegarden_bm9F8>y';
+$dbname = "u557447082_safegardedb";
+$conexion = new mysqli($servername, $username, $password, $dbname);
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
+    die("Error de conexión: " . $conn->connect_error);
 }
 
-// Verificar si se envió el formulario
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['correo'] ?? '';
-    $clave = $_POST['clave'] ?? '';
+// Procesar formulario
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $email = trim($_POST["email"] ?? '');
+    $contrasena = trim($_POST["contraseña"] ?? '');
 
-    // Buscar el usuario por correo
-    $sql = "SELECT * FROM usuario WHERE email = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $email);
-
-    if ($stmt->execute()) {
-        $resultado = $stmt->get_result();
-
-        if ($resultado->num_rows === 1) {
-            $usuario = $resultado->fetch_assoc();
-
-            // Comparar contraseñas (sin hash)
-            if ($usuario['contraseña'] === $clave) {
-                $_SESSION['id_usuario'] = $usuario['id_cliente'];
-                $_SESSION['nombre'] = $usuario['nombre'];
-                header("Location: html/dashboard.php");
-                exit;
-            } else {
-                $error = "Contraseña incorrecta.";
-            }
-        } else {
-            $error = "Correo no registrado.";
-        }
-    } else {
-        $error = "Error en la consulta.";
+    if (empty($email) || empty($contrasena)) {
+        echo "<script>alert('Por favor completa todos los campos'); window.location.href = 'login.php';</script>";
+        exit;
     }
 
-    $stmt->close();
-}
+    // Consulta al usuario
+    $stmt = $conn->prepare("SELECT id_cliente, contraseña FROM usuario WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
 
-$conn->close();
+    if ($resultado && $resultado->num_rows === 1) {
+        $usuario = $resultado->fetch_assoc();
+        $hash = $usuario['contraseña'];
+
+        if (password_verify($contrasena, $hash)) {
+            $_SESSION["id_cliente"] = $usuario["id_cliente"];
+            header("Location: html/dashboard.php");
+            exit;
+        } else {
+            echo "<script>alert('Contraseña incorrecta'); window.location.href = 'login.php';</script>";
+            exit;
+        }
+    } else {
+        echo "<script>alert('Correo no registrado'); window.location.href = 'login.php';</script>";
+        exit;
+    }
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Iniciar Sesión | SafeGarden</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-
+    * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
     body, html { height: 100%; background: #e8f5e9; }
-
     .container {
       display: flex;
       flex-direction: column;
@@ -70,7 +67,6 @@ $conn->close();
       min-height: 100vh;
       padding: 20px;
     }
-
     .card {
       background: #fff;
       border-radius: 12px;
@@ -81,16 +77,9 @@ $conn->close();
       max-width: 900px;
       overflow: hidden;
     }
-
-    .card-content {
-      display: flex;
-      flex-direction: column;
-    }
-
     @media (min-width: 768px) {
-      .card-content { flex-direction: row; }
+      .card { flex-direction: row; }
     }
-
     .left {
       flex: 1;
       background-color: #dcedc8;
@@ -99,37 +88,32 @@ $conn->close();
       justify-content: center;
       align-items: center;
       padding: 30px;
+      text-align: center;
     }
-
     .left img {
       width: 100%;
       max-width: 300px;
       border-radius: 10px;
       margin-bottom: 20px;
     }
-
     .left h1 {
       font-size: 26px;
       color: #2e7d32;
     }
-
     .right {
       flex: 1;
       padding: 40px;
     }
-
     .right h2 {
       font-size: 24px;
       color: #2e7d32;
       margin-bottom: 10px;
     }
-
     .right p {
       color: #666;
       font-size: 14px;
       margin-bottom: 20px;
     }
-
     .form input {
       width: 100%;
       padding: 12px;
@@ -137,7 +121,6 @@ $conn->close();
       border: 1px solid #ccc;
       border-radius: 6px;
     }
-
     .form button {
       width: 100%;
       padding: 12px;
@@ -149,11 +132,9 @@ $conn->close();
       cursor: pointer;
       transition: background 0.3s ease;
     }
-
     .form button:hover {
       background-color: #2e7d32;
     }
-
     .options {
       display: flex;
       justify-content: space-between;
@@ -161,27 +142,18 @@ $conn->close();
       font-size: 14px;
       margin-bottom: 10px;
     }
-
     .options a {
       color: #388e3c;
       text-decoration: none;
     }
-
     .register {
       text-align: center;
       font-size: 14px;
       margin-top: 10px;
     }
-
     .register a {
       color: #388e3c;
       text-decoration: none;
-    }
-
-    .error {
-      color: red;
-      text-align: center;
-      margin-bottom: 10px;
     }
   </style>
 </head>
@@ -189,33 +161,52 @@ $conn->close();
 
 <div class="container">
   <div class="card">
-    <div class="card-content">
+    <div class="left">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyqTieVYbildQV61aIF0sawJOBRSzflKWFSw&s" alt="Herramientas de jardín" />
+      <h1>Cuida tu jardín como cuidas de ti</h1>
+      <p>Protegue tu jardin.</p>
+    </div>
 
-      <div class="right">
-        <form class="form" method="POST" action="login.php">
-          <h2>¡Bienvenido de nuevo a SafeGarden!</h2>
-          <p>Inicia sesión en tu cuenta</p>
+    <div class="right">
+      <form class="form" method="POST" action="">
+        <h2>¡Bienvenido de nuevo a SafeGarden!</h2>
+        <p>Inicia sesión en tu cuenta</p>
 
-          <?php if (!empty($error)) echo "<p class='error'>$error</p>"; ?>
+        <input type="email" name="email" placeholder="Tu correo electrónico" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" />
 
-          <input type="email" name="correo" placeholder="Tu correo electrónico" required>
-          <input type="password" name="clave" placeholder="Contraseña" required>
+        <input type="password" name="contraseña" placeholder="Contraseña" required />
 
-          <div class="options">
-            <label><input type="checkbox"> Recuérdame</label>
-            <a href="#">¿Olvidaste tu contraseña?</a>
-          </div>
+        <button type="submit">Iniciar sesión</button>
 
-          <button type="submit">Iniciar sesión</button>
-
-          <div class="register">
-            <p>¿No tienes cuenta? <a href="registrouser.php">Regístrate</a></p>
-          </div>
-        </form>
-      </div>
+        <div class="register">
+          <p>¿No tienes cuenta? <a href="registrouser.php">Regístrate</a></p>
+        </div>
+      </form>
     </div>
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  <?php if (!empty($error)): ?>
+    Swal.fire({
+      icon: 'error',
+      title: '¡Error!',
+      text: <?= json_encode($error) ?>,
+      confirmButtonColor: '#388e3c'
+    });
+  <?php elseif (!empty($loginSuccess)): ?>
+    Swal.fire({
+      icon: 'success',
+      title: '¡Bienvenido!',
+      text: 'Has iniciado sesión correctamente.',
+      timer: 2000,
+      timerProgressBar: true,
+      showConfirmButton: false,
+      didClose: () => { window.location.href = 'html/dashboard.php'; }
+    });
+  <?php endif; ?>
+</script>
 
 </body>
 </html>

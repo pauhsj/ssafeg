@@ -1,23 +1,53 @@
-
 <?php
-$servername = "localhost";
-$username = "u557447082_9x8vh";
-$password = '$afegarden_bm9F8>y';
-$dbname = "u557447082_safegardedb";
+session_start();
 
-$mysqli = new mysqli($servername, $username, $password, $dbname);
-if ($mysqli->connect_error) {
-    die('Error de conexión (' . $mysqli->connect_errno . '): ' . $mysqli->connect_error);
+// Validar sesión
+if (!isset($_SESSION['id_cliente'])) {
+    header("Location: login.php");
+    exit();
 }
 
-$query = "SELECT temperatura, humedad, fecha FROM registros ORDER BY fecha DESC LIMIT 1";
-$result = $mysqli->query($query);
-$registro = $result->fetch_assoc();
+$id_cliente = $_SESSION['id_cliente'];
 
+// Conexión
+$servername = "localhost";
+$username = "u557447082_9x8vh";
+$password ='$afegarden_bm9F8>y';
+$dbname = "u557447082_safegardedb";
+$conexion = new mysqli($servername, $username, $password, $dbname);
 
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
+}
 
+// Temperatura y humedad
+$registro = null;
+$sqlRegistro = "SELECT temperatura, humedad, fecha FROM registros ORDER BY fecha DESC LIMIT 1";
+$result = $conn->query($sqlRegistro);
+if ($result && $result->num_rows > 0) {
+    $registro = $result->fetch_assoc();
+}
 
+// Eventos de movimiento
+$evento = null;
+$sqlEvento = "SELECT COUNT(*) AS total_eventos, MAX(fecha) AS ultima_fecha FROM sensor_movimiento WHERE DATE(fecha) = CURDATE()";
+$resultEvento = $conn->query($sqlEvento);
+if ($resultEvento && $resultEvento->num_rows > 0) {
+    $evento = $resultEvento->fetch_assoc();
+}
+
+// Sensores por usuario (usando la tabla correcta Dispositivos_LoRa y Sensores)
+$resultSensores = null;
+$sqlSensores = "
+    SELECT s.*, d.ubicacion 
+    FROM Sensores s
+    INNER JOIN Dispositivos_LoRa d ON s.id_lora = d.id_lora
+    WHERE d.id_cliente = $id_cliente
+";
+$resultSensores = $conn->query($sqlSensores);
 ?>
+
 
 <!DOCTYPE html>
 <html
@@ -341,55 +371,67 @@ $registro = $result->fetch_assoc();
                   </div>
                  <div class="container mt-4">
   
-                 <div class="container mt-4">
+                 <div class="row">
+  
+    <div class="container mt-4">
   <div class="row">
-  
-     <!-- Tarjeta Temperatura -->
-    <div class="col-md-4 mb-4">
-              <div class="card card-custom text-center">
-        <div class="card-body text-center">
-          <h5 class="card-title">Temperatura</h5>
-          <p class="display-5"><?= $registro['temperatura'] ?> °C</p>
-          <p><small><?= $registro['fecha'] ?></small></p>
-        </div>
+
+    <!-- Tarjeta de Temperatura y Humedad -->
+    <div class="col-md-6 mb-4">
+      <div class="card card-custom p-4">
+        <h5 class="card-title">Temperatura y Humedad</h5>
+        <?php if ($registro): ?>
+          <p> Temperatura: <?= $registro['temperatura'] ?> °C</p>
+          <p>Humedad: <?= $registro['humedad'] ?> %</p>
+          <p>Fecha: <?= $registro['fecha'] ?></p>
+        <?php else: ?>
+          <p>No hay registros de temperatura y humedad.</p>
+        <?php endif; ?>
       </div>
     </div>
 
-    <div class="col-md-4">
-              <div class="card card-custom text-center">
-        <div class="card-body text-center">
-          <h5 class="card-title">Humedad</h5>
-          <p class="display-5"><?= $registro['humedad'] ?> %</p>
-          <p><small> <?= $registro['fecha'] ?></small></p>
-        </div>
+    <!-- Tarjeta de Eventos de Movimiento -->
+    <div class="col-md-6 mb-4">
+      <div class="card card-custom p-4">
+        <h5 class="card-title">Eventos de Movimiento</h5>
+        <?php if ($evento): ?>
+          <p>Eventos hoy: <?= $evento['total_eventos'] ?></p>
+          <p>Último: <?= $evento['ultima_fecha'] ?></p>
+        <?php else: ?>
+          <p>No hay eventos de movimiento para hoy.</p>
+        <?php endif; ?>
       </div>
     </div>
-  
 
-
-    <!-- Tarjeta: Detección de Animales -->
-      <div class="col-md-4">
-        <div class="card card-custom text-center">
-          <div class="card-body">
-            <div class="icon-container icon-animal mb-3">
-              <i class='bx bxs-paw'></i>
+    <!-- Tarjeta de Sensores Registrados -->
+    <div class="col-12 mb-4">
+      <div class="card card-custom p-4">
+        <h5 class="card-title">Sensores Registrados</h5>
+        <?php if ($resultSensores && $resultSensores->num_rows > 0): ?>
+          <?php while ($row = $resultSensores->fetch_assoc()): ?>
+            <div class="border-bottom pb-2 mb-2">
+              <p>Tipo: <strong><?= htmlspecialchars($row['tipo_sensor']) ?></strong></p>
+              <p> Ubicación: <?= htmlspecialchars($row['descripcion']) ?></p>
+              <p>LoRa: <?= htmlspecialchars($row['ubicacion']) ?></p>
             </div>
-            <h5 class="card-title">Detección de Animales</h5>
-            <p class="card-text fs-4">3 eventos</p>
-          </div>
-        </div>
+          <?php endwhile; ?>
+        <?php else: ?>
+          <p>No hay sensores registrados para este usuario.</p>
+        <?php endif; ?>
       </div>
-      </div>
-</div>
+    </div>
 
-      <!-- Gráfico de barras -->
-    <div class="card card-custom mt-5">
-      <div class="card-body">
+    <!-- Tarjeta del gráfico -->
+    <div class="col-12">
+      <div class="card card-custom p-4">
         <h5 class="card-title">Historial de Datos</h5>
         <canvas id="graficoDatos" height="100"></canvas>
       </div>
     </div>
+
   </div>
+</div>
+
  </div>
 
 

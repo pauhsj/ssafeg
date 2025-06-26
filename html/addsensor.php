@@ -1,24 +1,64 @@
-
 <?php
+session_start();
+
 $servername = "localhost";
 $username = "u557447082_9x8vh";
-$password = '$afegarden_bm9F8>y';
+$password ='$afegarden_bm9F8>y';
 $dbname = "u557447082_safegardedb";
-
-
+$conexion = new mysqli($servername, $username, $password, $dbname);
 // Crear conexión
 $conn = new mysqli($servername, $username, $password, $dbname);
-
-// Verificar conexión
 if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
 
-// Obtener ID del usuario actual desde sesión
-$id_usuario = $_SESSION['id_usuario'] ?? 0;
+// Obtener ID del cliente desde sesión
+$id_cliente = $_SESSION['id_cliente'] ?? 0;
 
+if ($id_cliente === 0) {
+    die("No has iniciado sesión. Redirigiendo...");
+    header("Location: ../login.php");
+    exit;
+}
 
+// Obtener los dispositivos registrados por el cliente
+$result_lora = $conn->query("SELECT id_lora, nombre_dispositivo AS descripcion FROM Dispositivos_LoRa WHERE id_cliente = $id_cliente");
+
+// Registrar un nuevo dispositivo LoRa
+if (isset($_POST['registro_lora'])) {
+    $codigo = $_POST['codigo_lora'];
+    $ubicacion = $_POST['ubicacion'];
+
+    $sql = "INSERT INTO Dispositivos_LoRa (codigo_lora, nombre_dispositivo, id_cliente, fecha_registro) VALUES (?, ?, ?, NOW())";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssi", $codigo, $ubicacion, $id_cliente);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Dispositivo LoRa registrado correctamente'); window.location.href='addsensor.php';</script>";
+    } else {
+        echo "<script>alert('Error al registrar LoRa: " . $conn->error . "');</script>";
+    }
+}
+
+// Registrar sensor
+if (isset($_POST['registrar_sensor'])) {
+    $id_lora = $_POST['id_lora'];
+    $tipo = $_POST['tipo_sensor'];
+    $descripcion = $_POST['descripcion'];
+
+    $sql = "INSERT INTO sensores (id_lora, tipo_sensor, descripcion) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("iss", $id_lora, $tipo, $descripcion);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Sensor registrado correctamente'); window.location.href='addsensor.php';</script>";
+    } else {
+        echo "<script>alert('Error al registrar sensor: " . $conn->error . "');</script>";
+    }
+}
 ?>
+
+
 <!DOCTYPE html>
 <html
   lang="en"

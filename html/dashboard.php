@@ -12,40 +12,37 @@ $id_cliente = $_SESSION['id_cliente'];
 // Conexión
 $servername = "localhost";
 $username = "u557447082_9x8vh";
-$password ='$afegarden_bm9F8>y';
+$password = '$afegarden_bm9F8>y';
 $dbname = "u557447082_safegardedb";
-$conexion = new mysqli($servername, $username, $password, $dbname);
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
 
-// Temperatura y humedad
-$registro = null;
-$sqlRegistro = "SELECT temperatura, humedad, fecha FROM registros ORDER BY fecha DESC LIMIT 1";
-$result = $conn->query($sqlRegistro);
-if ($result && $result->num_rows > 0) {
-    $registro = $result->fetch_assoc();
-}
-
-// Eventos de movimiento
-$evento = null;
-$sqlEvento = "SELECT COUNT(*) AS total_eventos, MAX(fecha) AS ultima_fecha FROM sensor_movimiento WHERE DATE(fecha) = CURDATE()";
-$resultEvento = $conn->query($sqlEvento);
-if ($resultEvento && $resultEvento->num_rows > 0) {
-    $evento = $resultEvento->fetch_assoc();
-}
-
-// Sensores por usuario (usando la tabla correcta Dispositivos_LoRa y Sensores)
-$resultSensores = null;
+// Obtener sensores junto con dispositivo y últimos datos asociados
 $sqlSensores = "
-    SELECT s.*, d.ubicacion 
+    SELECT s.*, 
+           d.nombre_dispositivo AS micro_nombre,
+           d.ubicacion AS ubicacion_dispositivo,
+           -- Última temperatura para sensor DHT11
+           (SELECT temperatura FROM registros r WHERE r.id_sensor = s.id_sensor ORDER BY r.fecha DESC LIMIT 1) AS ultima_temp,
+           -- Última humedad para sensor DHT11
+           (SELECT humedad FROM registros r WHERE r.id_sensor = s.id_sensor ORDER BY r.fecha DESC LIMIT 1) AS ultima_hum,
+           -- Conteo de eventos hoy para sensor de movimiento
+           (SELECT COUNT(*) FROM sensor_movimiento m WHERE m.id_sensor = s.id_sensor AND DATE(m.fecha) = CURDATE()) AS eventos_hoy
     FROM Sensores s
-    INNER JOIN Dispositivos_LoRa d ON s.id_lora = d.id_lora
+    INNER JOIN Dispositivos_LoRa d ON s.id_dispositivo = d.id_lora
     WHERE d.id_cliente = $id_cliente
 ";
+
 $resultSensores = $conn->query($sqlSensores);
+$sensores = [];
+if ($resultSensores && $resultSensores->num_rows > 0) {
+    while ($row = $resultSensores->fetch_assoc()) {
+        $sensores[] = $row;
+    }
+}
 ?>
 
 
@@ -79,6 +76,7 @@ $resultSensores = $conn->query($sqlSensores);
       href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
       rel="stylesheet"
     />
+<link rel="stylesheet" href="../assets/vendor/fonts/boxicons.css" />
 
     <!-- Icons. Uncomment required icon fonts -->
     <link rel="stylesheet" href="../assets/vendor/fonts/boxicons.css" />
@@ -128,17 +126,27 @@ $resultSensores = $conn->query($sqlSensores);
       justify-content: center;
     }
 
-    .icon-temperature {
-      background-color: #ff6f61;
-    }
+    .sensor-card {
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  background: #ffffff;
+}
 
-    .icon-humidity {
-      background-color: #00bcd4;
-    }
+.sensor-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
 
-    .icon-animal {
-      background-color: #4caf50;
-    }
+.sensor-card .card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.sensor-card .badge {
+  font-size: 0.9rem;
+  padding: 0.5em 0.75em;
+}
+
   </style>
 </head>
   </head>
@@ -282,63 +290,7 @@ $resultSensores = $conn->query($sqlSensores);
                 </li>
 
                 <!-- User -->
-                <li class="nav-item navbar-dropdown dropdown-user dropdown">
-                  <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                    <div class="avatar avatar-online">
-                      <img src="../assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
-                    </div>
-                  </a>
-                  <ul class="dropdown-menu dropdown-menu-end">
-                    <li>
-                      <a class="dropdown-item" href="#">
-                        <div class="d-flex">
-                          <div class="flex-shrink-0 me-3">
-                            <div class="avatar avatar-online">
-                              <img src="../assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
-                            </div>
-                          </div>
-                          <div class="flex-grow-1">
-                            <span class="fw-semibold d-block">John Doe</span>
-                            <small class="text-muted">Admin</small>
-                          </div>
-                        </div>
-                      </a>
-                    </li>
-                    <li>
-                      <div class="dropdown-divider"></div>
-                    </li>
-                    <li>
-                      <a class="dropdown-item" href="perfil.php">
-                        <i class="bx bx-user me-2"></i>
-                        <span class="align-middle">Mi perfil</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a class="dropdown-item" href="">
-                        <i class="bx bx-cog me-2"></i>
-                        <span class="align-middle">Settings</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a class="dropdown-item" href="#">
-                        <span class="d-flex align-items-center align-middle">
-                          <i class="flex-shrink-0 bx bx-credit-card me-2"></i>
-                          <span class="flex-grow-1 align-middle">Billing</span>
-                          <span class="flex-shrink-0 badge badge-center rounded-pill bg-danger w-px-20 h-px-20">4</span>
-                        </span>
-                      </a>
-                    </li>
-                    <li>
-                      <div class="dropdown-divider"></div>
-                    </li>
-                    <li>
-                      <a class="dropdown-item" href="auth-login-basic.html">
-                        <i class="bx bx-power-off me-2"></i>
-                        <span class="align-middle">Log Out</span>
-                      </a>
-                    </li>
-                  </ul>
-                </li>
+              
                 <!--/ User -->
               </ul>
             </div>
@@ -369,73 +321,46 @@ $resultSensores = $conn->query($sqlSensores);
                       </div>
                     </div>
                   </div>
-                 <div class="container mt-4">
-  
-                 <div class="row">
-  
-    <div class="container mt-4">
-  <div class="row">
+                  <div class="container mt-4">
 
-    <!-- Tarjeta de Temperatura y Humedad -->
-    <div class="col-md-6 mb-4">
-      <div class="card card-custom p-4">
-        <h5 class="card-title">Temperatura y Humedad</h5>
-        <?php if ($registro): ?>
-          <p> Temperatura: <?= $registro['temperatura'] ?> °C</p>
-          <p>Humedad: <?= $registro['humedad'] ?> %</p>
-          <p>Fecha: <?= $registro['fecha'] ?></p>
-        <?php else: ?>
-          <p>No hay registros de temperatura y humedad.</p>
-        <?php endif; ?>
-      </div>
-    </div>
+                  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+  <?php foreach ($sensores as $row): ?>
+    <div class="col">
+      <div class="card sensor-card h-100 shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="card-title text-primary mb-2">
+            <?= htmlspecialchars($row['tipo_sensor'] ?? 'Sensor') ?>
+          </h5>
 
-    <!-- Tarjeta de Eventos de Movimiento -->
-    <div class="col-md-6 mb-4">
-      <div class="card card-custom p-4">
-        <h5 class="card-title">Eventos de Movimiento</h5>
-        <?php if ($evento): ?>
-          <p>Eventos hoy: <?= $evento['total_eventos'] ?></p>
-          <p>Último: <?= $evento['ultima_fecha'] ?></p>
-        <?php else: ?>
-          <p>No hay eventos de movimiento para hoy.</p>
-        <?php endif; ?>
-      </div>
-    </div>
+          <p class="mb-1"><i class="bx bx-chip me-2 text-info"></i><strong>Microcontrolador:</strong> <?= htmlspecialchars($row['micro_nombre'] ?? '') ?> (<?= htmlspecialchars($row['tipo_microcontrolador'] ?? '') ?>)</p>
+          <p class="mb-1"><i class="bx bx-map me-2 text-success"></i><strong>Ubicación dispositivo:</strong> <?= htmlspecialchars($row['ubicacion'] ?? '') ?></p>
+          <p class="mb-1"><i class="bx bx-current-location me-2 text-warning"></i><strong>Ubicación sensor:</strong> <?= htmlspecialchars($row['descripcion'] ?? '') ?></p>
 
-    <!-- Tarjeta de Sensores Registrados -->
-    <div class="col-12 mb-4">
-      <div class="card card-custom p-4">
-        <h5 class="card-title">Sensores Registrados</h5>
-        <?php if ($resultSensores && $resultSensores->num_rows > 0): ?>
-          <?php while ($row = $resultSensores->fetch_assoc()): ?>
-            <div class="border-bottom pb-2 mb-2">
-              <p>Tipo: <strong><?= htmlspecialchars($row['tipo_sensor']) ?></strong></p>
-              <p> Ubicación: <?= htmlspecialchars($row['descripcion']) ?></p>
-              <p>LoRa: <?= htmlspecialchars($row['ubicacion']) ?></p>
+          <?php if (($row['tipo_sensor'] ?? '') === 'DHT11'): ?>
+            <div class="mt-3">
+              <span class="badge bg-danger"><i class="bx bx-thermometer me-1"></i> <?= htmlspecialchars($row['ultima_temp'] ?? 'N/A') ?> °C</span>
+              <span class="badge bg-primary ms-2"><i class="bx bx-droplet me-1"></i> <?= htmlspecialchars($row['ultima_hum'] ?? 'N/A') ?> %</span>
             </div>
-          <?php endwhile; ?>
-        <?php else: ?>
-          <p>No hay sensores registrados para este usuario.</p>
-        <?php endif; ?>
+          <?php elseif (($row['tipo_sensor'] ?? '') === 'Movimiento'): ?>
+            <div class="mt-3">
+              <span class="badge bg-success"><i class="bx bx-run me-1"></i> Eventos hoy: <?= htmlspecialchars($row['eventos_hoy'] ?? 0) ?></span>
+            </div>
+          <?php endif; ?>
+        </div>
       </div>
     </div>
-
-    <!-- Tarjeta del gráfico -->
-    <div class="col-12">
-      <div class="card card-custom p-4">
-        <h5 class="card-title">Historial de Datos</h5>
-        <canvas id="graficoDatos" height="100"></canvas>
-      </div>
-    </div>
-
-  </div>
+  <?php endforeach; ?>
 </div>
 
- </div>
 
-
+    
+    </div>
+</div>              
+    </div>
   </div>
+    </div>
+</div>
+                 
 </div>
 
       
@@ -477,6 +402,28 @@ cargarDatosSensor();
 setInterval(cargarDatosSensor, 10000);
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const sensores = document.querySelectorAll('[id^="temp-"], [id^="hum-"], [id^="mov-"]');
+  
+  sensores.forEach(sensor => {
+    const id = sensor.id.split('-')[1];
+    const tipo = sensor.id.split('-')[0];
+
+    fetch(`obtener_valor_sensor.php?id_sensor=${id}&tipo=${tipo}`)
+      .then(res => res.json())
+      .then(data => {
+        if (tipo === 'temp') {
+          document.getElementById(`temp-${id}`).textContent = data.temperatura ?? 'N/D';
+        } else if (tipo === 'hum') {
+          document.getElementById(`hum-${id}`).textContent = data.humedad ?? 'N/D';
+        } else if (tipo === 'mov') {
+          document.getElementById(`mov-${id}`).textContent = data.total_eventos ?? '0';
+        }
+      });
+  });
+});
+</script>
 
 
 <script>

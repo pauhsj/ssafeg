@@ -6,28 +6,28 @@ error_reporting(E_ALL);
 // Configuración de conexión
 $servername = "localhost";
 $username = "u557447082_9x8vh";
-$password ='$afegarden_bm9F8>y';
+$password = '$afegarden_bm9F8>y';
 $dbname = "u557447082_safegardedb";
-$conexion = new mysqli($servername, $username, $password, $dbname);
-// Obtener los parámetros
+
+// Obtener los parámetros del sensor
+$id_sensor = $_GET['id_sensor'] ?? null;
 $temperatura = $_GET['temperatura'] ?? null;
 $humedad = $_GET['humedad'] ?? null;
 
-if ($temperatura !== null && $humedad !== null) {
+if ($id_sensor !== null && $temperatura !== null && $humedad !== null) {
     // Conectar a la base de datos
     $conexion = new mysqli($servername, $username, $password, $dbname);
-
     if ($conexion->connect_error) {
         die("Conexión fallida: " . $conexion->connect_error);
     }
 
-    // Insertar los datos de forma segura
-    $stmt = $conexion->prepare("INSERT INTO registros (temperatura, humedad) VALUES (?, ?)");
+    // Insertar los datos con id_sensor
+    $stmt = $conexion->prepare("INSERT INTO registros (id_sensor, temperatura, humedad, fecha) VALUES (?, ?, ?, NOW())");
     if ($stmt === false) {
         die("Error en prepare: " . $conexion->error);
     }
 
-    $stmt->bind_param("dd", $temperatura, $humedad);
+    $stmt->bind_param("idd", $id_sensor, $temperatura, $humedad);
 
     if ($stmt->execute()) {
         echo "Datos insertados correctamente.";
@@ -38,6 +38,6 @@ if ($temperatura !== null && $humedad !== null) {
     $stmt->close();
     $conexion->close();
 } else {
-    echo "Faltan parámetros de temperatura o humedad.";
+    echo "Faltan parámetros: id_sensor, temperatura o humedad.";
 }
 ?>

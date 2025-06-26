@@ -96,3 +96,33 @@ CREATE TABLE sensor_movimiento (
     movimiento TINYINT(1) NOT NULL,
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+
+CREATE TABLE Dispositivos_LoRa (
+  id_lora INT AUTO_INCREMENT PRIMARY KEY,
+  codigo_lora VARCHAR(20) UNIQUE NOT NULL,
+  nombre_dispositivo VARCHAR(100),
+  ubicacion VARCHAR(255),
+  id_cliente INT NOT NULL,
+  fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Dispositivos_ESP32 (
+  id_esp32 INT AUTO_INCREMENT PRIMARY KEY,
+  codigo_esp32 VARCHAR(20) UNIQUE NOT NULL,
+  nombre_dispositivo VARCHAR(100),
+  ubicacion VARCHAR(255),
+  id_cliente INT NOT NULL,
+  fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Sensores (
+  id_sensor INT AUTO_INCREMENT PRIMARY KEY,
+  id_dispositivo INT NOT NULL,
+  tipo_microcontrolador ENUM('LoRa','ESP32') NOT NULL,
+  tipo_sensor VARCHAR(50),
+  descripcion VARCHAR(255),
+  fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+ALTER TABLE sensor_movimiento ADD id_sensor INT;
+ALTER TABLE registros ADD id_sensor INT;

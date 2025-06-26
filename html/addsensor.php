@@ -1,63 +1,107 @@
 <?php
 session_start();
+header('Content-Type: text/html; charset=utf-8');
 
+// Conexión DB
 $servername = "localhost";
 $username = "u557447082_9x8vh";
-$password ='$afegarden_bm9F8>y';
+$password = '$afegarden_bm9F8>y';
 $dbname = "u557447082_safegardedb";
-$conexion = new mysqli($servername, $username, $password, $dbname);
-// Crear conexión
+
 $conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
-}
+if ($conn->connect_error) die("Conexión fallida: " . $conn->connect_error);
 
-// Obtener ID del cliente desde sesión
+// Verificar sesión
 $id_cliente = $_SESSION['id_cliente'] ?? 0;
-
-if ($id_cliente === 0) {
-    die("No has iniciado sesión. Redirigiendo...");
+if ($id_cliente == 0) {
     header("Location: ../login.php");
     exit;
 }
 
-// Obtener los dispositivos registrados por el cliente
-$result_lora = $conn->query("SELECT id_lora, nombre_dispositivo AS descripcion FROM Dispositivos_LoRa WHERE id_cliente = $id_cliente");
+// Manejo AJAX
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    // Para respuestas JSON
+    header('Content-Type: application/json');
 
-// Registrar un nuevo dispositivo LoRa
-if (isset($_POST['registro_lora'])) {
-    $codigo = $_POST['codigo_lora'];
-    $ubicacion = $_POST['ubicacion'];
+    // Generar código único numérico para dispositivo
+    if ($_POST['action'] === 'generar_codigo') {
+        // Código de 8 dígitos numéricos
+        do {
+            $codigo = strval(rand(10000000, 99999999));
+            if ($_POST['microcontrolador'] === 'LoRa') {
+                $res = $conn->query("SELECT 1 FROM Dispositivos_LoRa WHERE codigo_lora='$codigo'");
+            } else {
+                $res = $conn->query("SELECT 1 FROM Dispositivos_ESP32 WHERE codigo_esp32='$codigo'");
+            }
+        } while ($res->num_rows > 0);
 
-    $sql = "INSERT INTO Dispositivos_LoRa (codigo_lora, nombre_dispositivo, id_cliente, fecha_registro) VALUES (?, ?, ?, NOW())";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssi", $codigo, $ubicacion, $id_cliente);
+        echo json_encode(['success' => true, 'codigo' => $codigo]);
+        exit;
+    }
 
-    if ($stmt->execute()) {
-        echo "<script>alert('Dispositivo LoRa registrado correctamente'); window.location.href='addsensor.php';</script>";
-    } else {
-        echo "<script>alert('Error al registrar LoRa: " . $conn->error . "');</script>";
+    // Registrar dispositivo
+    if ($_POST['action'] === 'registrar_dispositivo') {
+        $micro = $_POST['microcontrolador'];
+        $codigo = $conn->real_escape_string($_POST['codigo']);
+        $nombre = $conn->real_escape_string($_POST['nombre']);
+        $ubicacion = $conn->real_escape_string($_POST['ubicacion']);
+
+        if ($micro === 'LoRa') {
+            $stmt = $conn->prepare("INSERT INTO Dispositivos_LoRa (codigo_lora, nombre_dispositivo, ubicacion, id_cliente, fecha_registro) VALUES (?, ?, ?, ?, NOW())");
+            $stmt->bind_param("sssi", $codigo, $nombre, $ubicacion, $id_cliente);
+        } elseif ($micro === 'ESP32') {
+            $stmt = $conn->prepare("INSERT INTO Dispositivos_ESP32 (codigo_esp32, nombre_dispositivo, ubicacion, id_cliente, fecha_registro) VALUES (?, ?, ?, ?, NOW())");
+            $stmt->bind_param("sssi", $codigo, $nombre, $ubicacion, $id_cliente);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Microcontrolador inválido']);
+            exit;
+        }
+
+        if ($stmt->execute()) {
+            echo json_encode(['success' => true, 'message' => 'Dispositivo registrado']);
+        } else {
+            echo json_encode(['success' => false, 'message' => $stmt->error]);
+        }
+        $stmt->close();
+        exit;
+    }
+
+    // Registrar sensor
+    if ($_POST['action'] === 'registrar_sensor') {
+        $micro = $_POST['microcontrolador'];
+        $id_dispositivo = intval($_POST['id_dispositivo']);
+        $tipo_sensor = $conn->real_escape_string($_POST['tipo_sensor']);
+        $descripcion = $conn->real_escape_string($_POST['descripcion']);
+
+        // Validar que el dispositivo exista
+        if ($micro === 'LoRa') {
+            $res = $conn->query("SELECT id_lora FROM Dispositivos_LoRa WHERE id_lora = $id_dispositivo AND id_cliente = $id_cliente");
+        } else {
+            $res = $conn->query("SELECT id_esp32 FROM Dispositivos_ESP32 WHERE id_esp32 = $id_dispositivo AND id_cliente = $id_cliente");
+        }
+
+        if (!$res || $res->num_rows == 0) {
+            echo json_encode(['success' => false, 'message' => 'Dispositivo no encontrado o no autorizado']);
+            exit;
+        }
+
+        $stmt = $conn->prepare("INSERT INTO Sensores (id_dispositivo, tipo_microcontrolador, tipo_sensor, descripcion, fecha_registro) VALUES (?, ?, ?, ?, NOW())");
+        $stmt->bind_param("isss", $id_dispositivo, $micro, $tipo_sensor, $descripcion);
+
+        if ($stmt->execute()) {
+            echo json_encode(['success' => true, 'message' => 'Sensor registrado']);
+        } else {
+            echo json_encode(['success' => false, 'message' => $stmt->error]);
+        }
+        $stmt->close();
+        exit;
     }
 }
 
-// Registrar sensor
-if (isset($_POST['registrar_sensor'])) {
-    $id_lora = $_POST['id_lora'];
-    $tipo = $_POST['tipo_sensor'];
-    $descripcion = $_POST['descripcion'];
-
-    $sql = "INSERT INTO sensores (id_lora, tipo_sensor, descripcion) VALUES (?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("iss", $id_lora, $tipo, $descripcion);
-
-    if ($stmt->execute()) {
-        echo "<script>alert('Sensor registrado correctamente'); window.location.href='addsensor.php';</script>";
-    } else {
-        echo "<script>alert('Error al registrar sensor: " . $conn->error . "');</script>";
-    }
-}
+// Obtener dispositivos LoRa y ESP32 para el cliente (para mostrar en el select)
+$result_lora = $conn->query("SELECT id_lora, nombre_dispositivo, codigo_lora FROM Dispositivos_LoRa WHERE id_cliente = $id_cliente");
+$result_esp32 = $conn->query("SELECT id_esp32, nombre_dispositivo, codigo_esp32 FROM Dispositivos_ESP32 WHERE id_cliente = $id_cliente");
 ?>
-
 
 <!DOCTYPE html>
 <html
@@ -75,7 +119,7 @@ if (isset($_POST['registrar_sensor'])) {
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title> Dashboard | safegarden </title>
+    <title> Registrar sensor | safegarden </title>
 
     <meta name="description" content="" />
 
@@ -160,7 +204,7 @@ if (isset($_POST['registrar_sensor'])) {
 
         <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
           <div class="app-brand demo">
-            <a href="index.html" class="app-brand-link d-flex align-items-center">
+            <a href="dashboard.php" class="app-brand-link d-flex align-items-center">
               <span class="app-brand-logo demo">
                   <img src="../assets/img/favicon/logoSG.png" alt="Logo" style="height: 50px; vertical-align: middle;" />
                   <defs>
@@ -246,19 +290,19 @@ if (isset($_POST['registrar_sensor'])) {
           </a>
         </li>
 
-        <!-- registro sensor -->
-       
+        <!-- registro sensosr -->
         <li class="menu-item">
         <a href="addsensor.php" class="menu-link">
-        <i class="menu-icon tf-icons bx bx-plus-square"></i>
-        <div data-i18n="Añadir">Añadir sensor</div>
+        <i class="menu-icon tf-icons bx bx-arrow-out-left-square-half"></i> 
+        <div data-i18n="registrar sensor">Registrar sensor</div>
       </a>
     </li>
+
  
         <!-- Logout -->
         <li class="menu-item">
         <a href="logout.php" class="menu-link">
-        <i class="menu-icon tf-icons bx bx-log-out"></i>
+        <i class="menu-icon tf-icons bx bx-log-out"></i> 
         <div data-i18n="Logout">Cerrar sesión</div>
       </a>
     </li>
@@ -272,169 +316,188 @@ if (isset($_POST['registrar_sensor'])) {
         <div class="layout-page">
           <!-- Navbar -->
 
-          <nav
-            class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
-            id="layout-navbar"
-          >
-            <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
-              <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
-                <i class="bx bx-menu bx-sm"></i>
-              </a>
-            </div>
-
-            
-
-            <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-
-             <h2 class="mb-2">Registrar Dispositivo LoRa</h2>
-              
-              <!-- /Search -->
-
-              <ul class="navbar-nav flex-row align-items-center ms-auto">
-                <!-- Place this tag where you want the button to render. -->
-                <li class="nav-item lh-1 me-3">
-                </li>
-
-                
-
-                <!-- User -->
-                <li class="nav-item navbar-dropdown dropdown-user dropdown">
-                  <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                    <div class="avatar avatar-online">
-                      <img src="../assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
-                    </div>
-                  </a>
-                  <ul class="dropdown-menu dropdown-menu-end">
-                    <li>
-                      <a class="dropdown-item" href="#">
-                        <div class="d-flex">
-                          <div class="flex-shrink-0 me-3">
-                            <div class="avatar avatar-online">
-                              <img src="../assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
-                            </div>
-                          </div>
-                          <div class="flex-grow-1">
-                            <span class="fw-semibold d-block">John Doe</span>
-                            <small class="text-muted">Admin</small>
-                          </div>
-                        </div>
-                      </a>
-                    </li>
-                    <li>
-                      <div class="dropdown-divider"></div>
-                    </li>
-                    <li>
-                      <a class="dropdown-item" href="perfil.php">
-                        <i class="bx bx-user me-2"></i>
-                        <span class="align-middle">Mi perfil</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a class="dropdown-item" href="#">
-                        <i class="bx bx-cog me-2"></i>
-                        <span class="align-middle">Settings</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a class="dropdown-item" href="#">
-                        <span class="d-flex align-items-center align-middle">
-                          <i class="flex-shrink-0 bx bx-credit-card me-2"></i>
-                          <span class="flex-grow-1 align-middle">Billing</span>
-                          <span class="flex-shrink-0 badge badge-center rounded-pill bg-danger w-px-20 h-px-20">4</span>
-                        </span>
-                      </a>
-                    </li>
-                    <li>
-                      <div class="dropdown-divider"></div>
-                    </li>
-                    <li>
-                      <a class="dropdown-item" href="auth-login-basic.html">
-                        <i class="bx bx-power-off me-2"></i>
-                        <span class="align-middle">Log Out</span>
-                      </a>
-                    </li>
-                  </ul>
-                </li>
-                <!--/ User -->
-              </ul>
-            </div>
-          </nav>
-
-
           <!-- / Navbar -->
+           <div class="content-wrapper">
+            <!-- Content -->
+<div class="container">
 
-          <div class="container">
-             <div class="mb-4"></div>
+    <h2>Registrar Dispositivo</h2>
+    <form id="formDispositivo" class="card p-4 mb-4">
+        <div class="mb-3">
+            <label for="microcontrolador" class="form-label">Microcontrolador</label>
+            <select name="microcontrolador" id="microcontrolador" class="form-select" required>
+                <option value="" disabled selected>Selecciona un microcontrolador</option>
+                <option value="LoRa">LoRa</option>
+                <option value="ESP32">ESP32</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="codigo" class="form-label">Código único </label>
+            <input type="text" name="codigo" id="codigo" class="form-control" readonly required placeholder="auto generado"/>
+        </div>
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre o ubicación del dispositivo</label>
+            <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Ejemplo: Huerto Norte" required />
+        </div>
+        <div class="mb-3">
+            <label for="ubicacion" class="form-label">Descripción de ubicación</label>
+            <input type="text" name="ubicacion" id="ubicacion" class="form-control" placeholder="Ejemplo: Cerca de la entrada" />
+        </div>
+        <button type="submit" class="btn btn-success">Registrar dispositivo</button>
+    </form>
+    <hr />
 
-
-
-          <form method="POST" class="card p-4 mb-5">
-    <div class="mb-3">
-        <label for="codigo_lora" class="form-label">Código único del Dispositivo</label>
-        <input type="text" name="codigo_lora" id="codigo_lora" class="form-control" placeholder="Ej: LORA123" required>
-        <small class="text-muted">Este código debe ser único. Evita duplicados.</small>
-    </div>
-
-    <div class="mb-3">
-        <label for="descripcion_lora" class="form-label">Ubicación o nombre</label>
-        <input type="text" name="ubicacion" id="ubicacion" class="form-control" placeholder="Ej: Huerto A">
-    </div>
-
-    <button type="submit" name="registro_lora" class="btn btn-success">Agregar LoRa</button>
-</form>
-
-
-    <h2 class="mb-4">Registrar Sensor</h2>
-<form method="POST" class="card p-4">
-    <div class="mb-3">
-        <label for="id_lora" class="form-label">Dispositivo LoRa</label>
-        <select name="id_lora" id="id_lora" class="form-select" required>
-            <option value="" disabled selected>Seleccione un dispositivo</option>
-            <?php while ($row = $result_lora->fetch_assoc()): ?>
-                <option value="<?= $row['id_lora'] ?>"><?= $row['descripcion'] ?></option>
-            <?php endwhile; ?>
-        </select>
-    </div>
-
-    <div class="mb-3">
-        <label for="tipo_sensor" class="form-label">Tipo de Sensor</label>
-        <input type="text" name="tipo_sensor" id="tipo_sensor" class="form-control" placeholder="Ej. DHT11, ultrasónico" required>
-    </div>
-
-    <div class="mb-3">
-        <label for="descripcion" class="form-label">Ubicación / Función</label>
-        <input type="text" name="descripcion" id="descripcion" class="form-control" placeholder="Ej. Sensor en esquina norte del huerto">
-    </div>
-
-    <button type="submit" name="registrar_sensor" class="btn btn-primary">Agregar Sensor</button>
-</form>
-           
+    <h2>Registrar Sensor</h2>
+    <form id="formSensor" class="card p-4">
+        <div class="mb-3">
+            <label for="microcontrolador_sensor" class="form-label">Microcontrolador</label>
+            <select name="microcontrolador_sensor" id="microcontrolador_sensor" class="form-select" required>
+                <option value="" disabled selected>Selecciona un microcontrolador</option>
+                <option value="LoRa">LoRa</option>
+                <option value="ESP32">ESP32</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="dispositivo" class="form-label">Dispositivo</label>
+            <select name="id_dispositivo" id="dispositivo" class="form-select" required>
+                <option value="" disabled selected>Selecciona un dispositivo</option>
+                <!-- Opciones cargadas por JS -->
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="tipo_sensor" class="form-label">Tipo de sensor</label>
+            <input type="text" name="tipo_sensor" id="tipo_sensor" class="form-control" placeholder="Ejemplo: DHT11, Ultrasónico" required />
+        </div>
+        <div class="mb-3">
+            <label for="descripcion_sensor" class="form-label">Descripción</label>
+            <input type="text" name="descripcion" id="descripcion_sensor" class="form-control" placeholder="Ejemplo: Esquina noreste del huerto" />
+        </div>
+        <button type="submit" class="btn btn-primary">Registrar sensor</button>
+    </form>
 </div>
 
 <script>
-document.getElementById("formLora").addEventListener("submit", function(e) {
-    e.preventDefault();
-
-    const formData = new FormData(this);
-
-    fetch("registro_lora.php", {
-        method: "POST",
-        body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            alert("LoRa y sensor registrados correctamente");
-        } else {
-            alert("Error: " + data.message);
+    const dispositivosLoRa = <?php 
+        $arr = [];
+        while($row = $result_lora->fetch_assoc()) {
+            $arr[] = $row;
         }
-    })
-    .catch(err => console.error(err));
-});
+        echo json_encode($arr);
+    ?>;
+    const dispositivosESP32 = <?php
+        $arr2 = [];
+        while($row2 = $result_esp32->fetch_assoc()) {
+            $arr2[] = $row2;
+        }
+        echo json_encode($arr2);
+    ?>;
+
+    // Generar código cuando seleccionen microcontrolador en dispositivo
+    document.getElementById('microcontrolador').addEventListener('change', function(){
+        const micro = this.value;
+        if(!micro) return;
+        fetch('', {
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: new URLSearchParams({action:'generar_codigo', microcontrolador: micro})
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                document.getElementById('codigo').value = data.codigo;
+            } else {
+                alert('Error generando código: '+data.message);
+            }
+        })
+        .catch(() => alert('Error en la comunicación'));
+    });
+
+    // Manejo registro dispositivo
+    document.getElementById('formDispositivo').addEventListener('submit', function(e){
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+        formData.append('action','registrar_dispositivo');
+
+        fetch('', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+            if(data.success){
+                form.reset();
+                document.getElementById('codigo').value = '';
+                // Actualizar listas dispositivos
+                actualizarListas();
+            }
+        })
+        .catch(() => alert('Error en la comunicación'));
+    });
+
+    // Actualizar lista de dispositivos según microcontrolador seleccionado para sensor
+    function actualizarListas(){
+        // Se reconstruyen las listas del select de dispositivos
+        const microSelect = document.getElementById('microcontrolador_sensor');
+        const dispSelect = document.getElementById('dispositivo');
+        const micro = microSelect.value;
+
+        // Vaciar opciones
+        dispSelect.innerHTML = '<option value="" disabled selected>Selecciona un dispositivo</option>';
+
+        let lista = [];
+        if(micro === 'LoRa'){
+            lista = dispositivosLoRa;
+        } else if(micro === 'ESP32'){
+            lista = dispositivosESP32;
+        }
+
+        lista.forEach(d => {
+            let code = d.codigo_lora || d.codigo_esp32 || '';
+            let nombre = d.nombre_dispositivo || 'Sin nombre';
+            let option = document.createElement('option');
+            option.value = d.id_lora || d.id_esp32;
+            option.textContent = nombre + " (" + code + ")";
+            dispSelect.appendChild(option);
+        });
+    }
+
+    // Cuando cambia el microcontrolador para sensores
+    document.getElementById('microcontrolador_sensor').addEventListener('change', actualizarListas);
+
+    // Registrar sensor
+    document.getElementById('formSensor').addEventListener('submit', function(e){
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+        formData.append('action','registrar_sensor');
+
+        // Cambiar nombre campo microcontrolador para que coincida con backend
+        formData.set('microcontrolador', formData.get('microcontrolador_sensor'));
+
+        fetch('', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+            if(data.success){
+                form.reset();
+                document.getElementById('dispositivo').innerHTML = '<option value="" disabled selected>Selecciona un dispositivo</option>';
+            }
+        })
+        .catch(() => alert('Error en la comunicación'));
+    });
+
 </script>
+            
+
+           
 
 
-  
+
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
@@ -442,6 +505,9 @@ document.getElementById("formLora").addEventListener("submit", function(e) {
     <script src="../assets/vendor/libs/popper/popper.js"></script>
     <script src="../assets/vendor/js/bootstrap.js"></script>
     <script src="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script src="../assets/vendor/js/menu.js"></script>
     <!-- endbuild -->

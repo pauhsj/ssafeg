@@ -114,6 +114,33 @@ if ($result && $result->num_rows > 0) {
     }
     $datos_grafica = array_reverse($datos_grafica);
 }
+
+date_default_timezone_set('America/Mexico_City');
+
+$id_sensor = 1; 
+
+
+$insert = $conn->prepare("INSERT INTO deteccion_movimiento (id_sensor, fecha_hora) VALUES (?, NOW())");
+$insert->bind_param("i", $id_sensor);
+$insert->execute();
+$insert->close();
+
+
+$hoy_inicio = date("Y-m-d") . " 00:00:00";
+$hoy_fin = date("Y-m-d") . " 23:59:59";
+
+$sql = "SELECT COUNT(*) FROM deteccion_movimiento WHERE fecha_hora BETWEEN ? AND ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ss", $hoy_inicio, $hoy_fin);
+$stmt->execute();
+$stmt->bind_result($eventosHoy);
+$stmt->fetch();
+$stmt->close();
+
+
+$estadisticas = [
+    'eventos_hoy' => $eventosHoy
+];
 ?>
 
 
@@ -417,13 +444,13 @@ if ($result && $result->num_rows > 0) {
 
   <!-- Eventos movimiento hoy -->
   <div class="col-md-4 mt-3">
-    <div class="card text-center card-custom">
-      <div class="card-body">
-        <h5 class="card-title">Eventos de Movimiento Hoy</h5>
-        <p class="display-6 text-danger"><?= $estadisticas['eventos_hoy'] ?></p>
-      </div>
+  <div class="card text-center card-custom">
+    <div class="card-body">
+      <h5 class="card-title">Eventos de Movimiento Hoy</h5>
+      <p class="display-6 text-danger"><?= $estadisticas['eventos_hoy'] ?></p>
     </div>
   </div>
+</div>
 
   <!-- Promedio Temperatura -->
   <div class="col-md-4 mt-3">

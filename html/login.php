@@ -212,7 +212,7 @@ $conn->close();
       timer: 2000,
       timerProgressBar: true,
       showConfirmButton: false,
-      didClose: () => { window.location.href = 'html/dashboard.php'; }
+      didClose: () => { window.location.href = 'dashboard.php'; }
     });
   <?php endif; ?>
 </script>

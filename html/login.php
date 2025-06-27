@@ -203,7 +203,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       timer: 2000,
       timerProgressBar: true,
       showConfirmButton: false,
-      didClose: () => { window.location.href = 'dasboard.php'; }
+      didClose: () => { window.location.href = 'dashboard.php'; }
     });
   <?php endif; ?>
 </script>

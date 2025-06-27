@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->bind_param("sssss", $nombre, $email, $passHasheada, $telefono, $ciudad);
                 if ($stmt->execute()) {
                     $success = "Registro exitoso, redirigiendo...";
-                    // Puedes poner header() aquí pero usaré JS para mostrar mensaje bonito antes
+                    
                 } else {
                     $error = "Error al registrar: " . $stmt->error;
                 }

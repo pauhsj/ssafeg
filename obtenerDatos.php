@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 // Configuración de conexión
 $servername = "localhost";
 $username = "u557447082_9x8vh";
-$password = '$afegarden_bm9F8>y';
+$password = "safegarden_bm9F8>y";
 $dbname = "u557447082_safegardendb";
 
 // Obtener los parámetros del sensor

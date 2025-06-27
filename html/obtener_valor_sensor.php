@@ -1,34 +1,48 @@
 <?php
+session_start();
 $servername = "localhost";
 $username = "u557447082_9x8vh";
 $password ="safegarden_bm9F8>y";
 $dbname = "u557447082_safegardendb";
-$conn = new mysqli($servername, $username, $password, $dbname);
-
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Error de conexión: " . $conn->connect_error);
 }
-$id = intval($_GET['id_sensor'] ?? 0);
-$tipo = $_GET['tipo'] ?? '';
 
-header('Content-Type: application/json');
+$error = '';
 
-if ($tipo === 'temp' || $tipo === 'hum') {
-    $sql = "SELECT temperatura, humedad FROM registros WHERE id_sensor = $id ORDER BY fecha DESC LIMIT 1";
-    $res = $conn->query($sql);
-    if ($res && $res->num_rows > 0) {
-        echo json_encode($res->fetch_assoc());
+// Procesar formulario
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $email = trim($_POST["email"] ?? '');
+    $contrasena = trim($_POST["contraseña"] ?? '');
+
+    if (empty($email) || empty($contrasena)) {
+        $error = "Por favor completa todos los campos.";
     } else {
-        echo json_encode(['temperatura' => null, 'humedad' => null]);
+        $stmt = $conn->prepare("SELECT id_cliente, contraseña FROM usuario WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+
+        if ($resultado && $resultado->num_rows === 1) {
+            $usuario = $resultado->fetch_assoc();
+            $hash = $usuario['contraseña'];
+
+            if (password_verify($contrasena, $hash)) {
+                $_SESSION["id_cliente"] = $usuario["id_cliente"];
+                // Redirige directamente al dashboard (sin depender de JS)
+                header("Location: dashboard.php");
+                exit;
+            } else {
+                $error = "Contraseña incorrecta.";
+            }
+        } else {
+            $error = "Correo no registrado.";
+        }
+        $stmt->close();
     }
-} elseif ($tipo === 'mov') {
-    $sql = "SELECT COUNT(*) AS total_eventos FROM sensor_movimiento WHERE id_sensor = $id AND DATE(fecha) = CURDATE()";
-    $res = $conn->query($sql);
-    $row = $res->fetch_assoc();
-    echo json_encode(['total_eventos' => $row['total_eventos'] ?? 0]);
-} else {
-    echo json_encode(['error' => 'Tipo inválido']);
 }
+$conn->close();
 ?>
+

@@ -1,10 +1,10 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-
-// Conexión
-include_once 'conexion.php';           
-
+$servername = "localhost";
+$username = "u557447082_9x8vh";
+$password ="safegarden_bm9F8>y";
+$dbname = "u557447082_safegardendb";
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Datos recibidos
@@ -21,14 +21,14 @@ if ($temperatura !== null && $humedad !== null && $id_sensor !== null) {
     $stmt->bind_param("idd", $id_sensor, $temperatura, $humedad);
 
     if ($stmt->execute()) {
-        echo "✅ Registro guardado correctamente para sensor ID $id_sensor.";
+        echo " Registro guardado correctamente para sensor ID $id_sensor.";
     } else {
-        echo "❌ Error al guardar: " . $stmt->error;
+        echo " Error al guardar: " . $stmt->error;
     }
 
     $stmt->close();
 } else {
-    echo "⚠️ Faltan parámetros: temperatura, humedad o id_sensor.";
+    echo " Faltan parámetros: temperatura, humedad o id_sensor.";
 }
 
 $conexion->close();

@@ -1,5 +1,8 @@
 <?php
-session_start(); // ¡Muy importante!
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+session_start();
 $servername = "localhost";
 $username = "u557447082_9x8vh";
 $password ="safegarden_bm9F8>y";

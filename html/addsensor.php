@@ -3,16 +3,15 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 session_start();
+
 $servername = "localhost";
 $username = "u557447082_9x8vh";
-$password ="safegarden_bm9F8>y";
+$password = "safegarden_bm9F8>y";
 $dbname = "u557447082_safegardendb";
-
 
 header('Content-Type: text/html; charset=utf-8');
 
 // Conexión DB
-
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) die("Conexión fallida: " . $conn->connect_error);
 
@@ -25,18 +24,16 @@ if ($id_cliente == 0) {
 
 // Manejo AJAX
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-    // Para respuestas JSON
     header('Content-Type: application/json');
 
-    // Generar código único numérico para dispositivo
+    // Generar código único numérico
     if ($_POST['action'] === 'generar_codigo') {
-        // Código de 8 dígitos numéricos
         do {
             $codigo = strval(rand(10000000, 99999999));
             if ($_POST['microcontrolador'] === 'LoRa') {
-                $res = $conn->query("SELECT 1 FROM dispositivos_Lora WHERE codigo_lora='$codigo'");
+                $res = $conn->query("SELECT 1 FROM dispositivos_lora WHERE codigo_lora='$codigo'");
             } else {
-                $res = $conn->query("SELECT 1 FROM dispositivos_ESP32 WHERE codigo_esp32='$codigo'");
+                $res = $conn->query("SELECT 1 FROM dispositivos_esp32 WHERE codigo_esp32='$codigo'");
             }
         } while ($res->num_rows > 0);
 
@@ -52,10 +49,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $ubicacion = $conn->real_escape_string($_POST['ubicacion']);
 
         if ($micro === 'LoRa') {
-            $stmt = $conn->prepare("INSERT INTO dispositivos_Lora (codigo_lora, nombre_dispositivo, ubicacion, id_cliente, fecha_registro) VALUES (?, ?, ?, ?, NOW())");
+            $stmt = $conn->prepare("INSERT INTO dispositivos_lora (codigo_lora, nombre_dispositivo, ubicacion, id_cliente, fecha_registro) VALUES (?, ?, ?, ?, NOW())");
             $stmt->bind_param("sssi", $codigo, $nombre, $ubicacion, $id_cliente);
         } elseif ($micro === 'ESP32') {
-            $stmt = $conn->prepare("INSERT INTO dispositivos_ESP32 (codigo_esp32, nombre_dispositivo, ubicacion, id_cliente, fecha_registro) VALUES (?, ?, ?, ?, NOW())");
+            $stmt = $conn->prepare("INSERT INTO dispositivos_esp32 (codigo_esp32, nombre_dispositivo, ubicacion, id_cliente, fecha_registro) VALUES (?, ?, ?, ?, NOW())");
             $stmt->bind_param("sssi", $codigo, $nombre, $ubicacion, $id_cliente);
         } else {
             echo json_encode(['success' => false, 'message' => 'Microcontrolador inválido']);
@@ -80,9 +77,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
         // Validar que el dispositivo exista
         if ($micro === 'LoRa') {
-            $res = $conn->query("SELECT id_lora FROM dispositivos_Lora WHERE id_lora = $id_dispositivo AND id_cliente = $id_cliente");
+            $res = $conn->query("SELECT id_lora FROM dispositivos_lora WHERE id_lora = $id_dispositivo AND id_cliente = $id_cliente");
         } else {
-            $res = $conn->query("SELECT id_esp32 FROM dispositivos_ESP32 WHERE id_esp32 = $id_dispositivo AND id_cliente = $id_cliente");
+            $res = $conn->query("SELECT id_esp32 FROM dispositivos_esp32 WHERE id_esp32 = $id_dispositivo AND id_cliente = $id_cliente");
         }
 
         if (!$res || $res->num_rows == 0) {
@@ -103,9 +100,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     }
 }
 
-// Obtener dispositivos LoRa y ESP32 para el cliente (para mostrar en el select)
+// Obtener dispositivos para selects (formulario)
 $result_lora = $conn->query("SELECT id_lora, nombre_dispositivo, codigo_lora FROM dispositivos_lora WHERE id_cliente = $id_cliente");
-$result_esp32 = $conn->query("SELECT id_esp32, nombre_dispositivo, codigo_esp32 FROM dispositivos_ESP32 WHERE id_cliente = $id_cliente");
+$result_esp32 = $conn->query("SELECT id_esp32, nombre_dispositivo, codigo_esp32 FROM dispositivos_esp32 WHERE id_cliente = $id_cliente");
 ?>
 
 <!DOCTYPE html>

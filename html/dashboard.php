@@ -298,14 +298,8 @@ if ($result && $result->num_rows > 0) {
               </a>
             </li>
 
-           <!-- Registros -->
   
-           <li class="menu-item">
-           <a href="registros.php" class="menu-link">
-           <i class="menu-icon tf-icons bx bx-file"></i>
-           <div data-i18n="Registros">Registros</div>
-          </a> 
-          </li>
+    
 
             <!-- Perfil -->
   
@@ -355,11 +349,6 @@ if ($result && $result->num_rows > 0) {
             <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
               
               <!-- /Search -->
-
-              <ul class="navbar-nav flex-row align-items-center ms-auto">
-                <!-- Place this tag where you want the button to render. -->
-                <li class="nav-item lh-1 me-3">
-                </li>
 
                 <!-- User -->
               

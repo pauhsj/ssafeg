@@ -3,10 +3,11 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 session_start();
+
 $servername = "localhost";
 $username = "u557447082_9x8vh";
-$password ="safegarden_bm9F8>y";
-$dbname = "u557447082_safegardendb";;
+$password = "safegarden_bm9F8>y";
+$dbname = "u557447082_safegardendb";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
@@ -17,23 +18,14 @@ $error = '';
 $loginSuccess = false;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Sanitización básica
-    $email_raw = $_POST["email"] ?? '';
-    $contrasena_raw = $_POST["contraseña"] ?? '';
+    $email = filter_var(trim($_POST["email"] ?? ''), FILTER_SANITIZE_EMAIL);
+    $contrasena = trim($_POST["contraseña"] ?? '');
 
-    // Sanitizar inputs
-    $email = filter_var(trim($email_raw), FILTER_SANITIZE_EMAIL);
-    $contrasena = trim($contrasena_raw);
-
-    // Validaciones servidor
     if (empty($email) || empty($contrasena)) {
         $error = "Por favor completa todos los campos.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Correo electrónico inválido.";
-    } elseif (!preg_match("/^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[\W_]).{8,}$/", $contrasena)) {
-        $error = "La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, números y símbolos.";
     } else {
-        // Consulta al usuario usando sentencia preparada para evitar inyección
         $stmt = $conn->prepare("SELECT id_cliente, contraseña FROM usuario WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -123,11 +115,6 @@ $conn->close();
       color: transparent;
       margin-bottom: 10px;
     }
-    .right p {
-      color: #666;
-      font-size: 14px;
-      margin-bottom: 20px;
-    }
     .form input {
       width: 100%;
       padding: 12px;
@@ -149,24 +136,15 @@ $conn->close();
     .form button:hover {
       background-color: #2e7d32;
     }
-    .register {
+    .register, .back-link {
       text-align: center;
       font-size: 14px;
       margin-top: 10px;
     }
-    .register a {
+    .register a, .back-link a {
       color: #388e3c;
       text-decoration: none;
-    }
-    .back-link {
-      text-align: center;
-      margin-top: 15px;
-    }
-    .back-link a {
-      text-decoration: none;
-      color: #2e7d32;
       font-weight: bold;
-      transition: color 0.3s;
     }
     .back-link a:hover {
       color: #1b5e20;
@@ -180,25 +158,20 @@ $conn->close();
     <div class="left">
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyqTieVYbildQV61aIF0sawJOBRSzflKWFSw&s" alt="Herramientas de jardín" />
       <h1>Cuida tu jardín como cuidas de ti</h1>
-      <p>Protege tu jardín.</p>
     </div>
 
     <div class="right">
       <form class="form" method="POST" action="" id="loginForm" novalidate>
         <h2>¡Bienvenido de nuevo a SafeGarden!</h2>
-        <p>Inicia sesión en tu cuenta</p>
-
-        <input type="email" name="email" placeholder="Tu correo electrónico" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" />
+        <input type="email" name="email" placeholder="Correo electrónico" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" />
         <input type="password" name="contraseña" placeholder="Contraseña" required />
-
         <button type="submit">Iniciar sesión</button>
 
         <div class="register">
-          <p>¿No tienes cuenta? <a href="registrouser.php">Regístrate</a></p>
+          ¿No tienes cuenta? <a href="registrouser.php">Regístrate</a>
         </div>
-
         <div class="back-link">
-          <p><a href="index.html"><i class="fas fa-arrow-left"></i> Volver al inicio</a></p>
+          <a href="index.html"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
         </div>
       </form>
     </div>
@@ -207,43 +180,27 @@ $conn->close();
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  // Validación simple en cliente antes de enviar
   document.getElementById('loginForm').addEventListener('submit', function(e) {
-    const form = this;
-    const email = form.email.value.trim();
-    const password = form.contraseña.value.trim();
+    const email = this.email.value.trim();
+    const password = this.contraseña.value.trim();
 
     if (!email || !password) {
       e.preventDefault();
-      Swal.fire({
-        icon: 'warning',
-        title: 'Campos incompletos',
-        text: 'Por favor llena todos los campos.',
-        confirmButtonColor: '#388e3c'
-      });
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      Swal.fire({ icon: 'warning', title: 'Campos incompletos', text: 'Por favor llena todos los campos.', confirmButtonColor: '#388e3c' });
+      return;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email)) {
       e.preventDefault();
-      Swal.fire({
-        icon: 'error',
-        title: 'Correo inválido',
-        text: 'Por favor ingresa un correo electrónico válido.',
-        confirmButtonColor: '#388e3c'
-      });
-    } else if (!/(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[\W_]).{8,}/.test(password)) {
-      e.preventDefault();
-      Swal.fire({
-        icon: 'error',
-        title: 'Contraseña inválida',
-        text: 'La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, números y símbolos.',
-        confirmButtonColor: '#388e3c'
-      });
+      Swal.fire({ icon: 'error', title: 'Correo inválido', text: 'Correo no válido.', confirmButtonColor: '#388e3c' });
+      return;
     }
   });
 
   <?php if (!empty($error)): ?>
     Swal.fire({
       icon: 'error',
-      title: '¡Error!',
+      title: 'Error de inicio de sesión',
       text: <?= json_encode($error) ?>,
       confirmButtonColor: '#388e3c'
     });
@@ -251,7 +208,7 @@ $conn->close();
     Swal.fire({
       icon: 'success',
       title: '¡Bienvenido!',
-      text: 'Has iniciado sesión correctamente.',
+      text: 'Inicio de sesión exitoso.',
       timer: 2000,
       timerProgressBar: true,
       showConfirmButton: false,

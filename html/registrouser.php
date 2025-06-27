@@ -27,9 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "El nombre solo puede contener letras y espacios.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Correo electrónico no es válido.";
-    } elseif (!preg_match("/^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[\W_]).{8,}$/", $contraseña)) {
-        $error = "La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, números y símbolos.";
-    } elseif (!preg_match("/^\d{10}$/", $telefono)) {
+    
         $error = "El teléfono debe contener exactamente 10 números.";
     } elseif (!preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/", $ciudad)) {
         $error = "La ciudad solo puede contener letras y espacios.";

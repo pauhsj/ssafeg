@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if (password_verify($contrasena, $hash)) {
             $_SESSION["id_cliente"] = $usuario["id_cliente"];
-            header("Location:dash.php");
+            header("Location: dashboard.php");
             exit;
         } else {
             echo "<script>alert('Contraseña incorrecta'); window.location.href = 'login.php';</script>";

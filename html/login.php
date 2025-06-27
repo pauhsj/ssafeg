@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if (password_verify($contrasena, $hash)) {
             $_SESSION["id_cliente"] = $usuario["id_cliente"];
-            header("Location: dashboard.php");
+            header("Location:html/dashboard.php");
             exit;
         } else {
             echo "<script>alert('Contraseña incorrecta'); window.location.href = 'login.php';</script>";
@@ -203,7 +203,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       timer: 2000,
       timerProgressBar: true,
       showConfirmButton: false,
-      didClose: () => { window.location.href = 'dashbord.php'; }
+      didClose: () => { window.location.href = 'html/dashboard.php'; }
     });
   <?php endif; ?>
 </script>

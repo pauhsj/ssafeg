@@ -52,10 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $ubicacion = $conn->real_escape_string($_POST['ubicacion']);
 
         if ($micro === 'LoRa') {
-            $stmt = $conn->prepare("INSERT INTO Dispositivos_LoRa (codigo_lora, nombre_dispositivo, ubicacion, id_cliente, fecha_registro) VALUES (?, ?, ?, ?, NOW())");
+            $stmt = $conn->prepare("INSERT INTO dispositivos_LoRa (codigo_lora, nombre_dispositivo, ubicacion, id_cliente, fecha_registro) VALUES (?, ?, ?, ?, NOW())");
             $stmt->bind_param("sssi", $codigo, $nombre, $ubicacion, $id_cliente);
         } elseif ($micro === 'ESP32') {
-            $stmt = $conn->prepare("INSERT INTO Dispositivos_ESP32 (codigo_esp32, nombre_dispositivo, ubicacion, id_cliente, fecha_registro) VALUES (?, ?, ?, ?, NOW())");
+            $stmt = $conn->prepare("INSERT INTO dispositivos_ESP32 (codigo_esp32, nombre_dispositivo, ubicacion, id_cliente, fecha_registro) VALUES (?, ?, ?, ?, NOW())");
             $stmt->bind_param("sssi", $codigo, $nombre, $ubicacion, $id_cliente);
         } else {
             echo json_encode(['success' => false, 'message' => 'Microcontrolador inválido']);
@@ -80,9 +80,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
         // Validar que el dispositivo exista
         if ($micro === 'LoRa') {
-            $res = $conn->query("SELECT id_lora FROM Dispositivos_LoRa WHERE id_lora = $id_dispositivo AND id_cliente = $id_cliente");
+            $res = $conn->query("SELECT id_lora FROM dispositivos_LoRa WHERE id_lora = $id_dispositivo AND id_cliente = $id_cliente");
         } else {
-            $res = $conn->query("SELECT id_esp32 FROM Dispositivos_ESP32 WHERE id_esp32 = $id_dispositivo AND id_cliente = $id_cliente");
+            $res = $conn->query("SELECT id_esp32 FROM dispositivos_ESP32 WHERE id_esp32 = $id_dispositivo AND id_cliente = $id_cliente");
         }
 
         if (!$res || $res->num_rows == 0) {
@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             exit;
         }
 
-        $stmt = $conn->prepare("INSERT INTO Sensores (id_dispositivo, tipo_microcontrolador, tipo_sensor, descripcion, fecha_registro) VALUES (?, ?, ?, ?, NOW())");
+        $stmt = $conn->prepare("INSERT INTO sensores (id_dispositivo, tipo_microcontrolador, tipo_sensor, descripcion, fecha_registro) VALUES (?, ?, ?, ?, NOW())");
         $stmt->bind_param("isss", $id_dispositivo, $micro, $tipo_sensor, $descripcion);
 
         if ($stmt->execute()) {

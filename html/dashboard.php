@@ -394,7 +394,7 @@ if ($result && $result->num_rows > 0) {
                       </div>
                     </div>
                   </div>
-                  <div class="container mt-4">
+                  
 
                   <div class="row mt-4">
   <!-- Total sensores -->

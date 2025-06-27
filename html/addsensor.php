@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         do {
             $codigo = strval(rand(10000000, 99999999));
             if ($_POST['microcontrolador'] === 'LoRa') {
-                $res = $conn->query("SELECT 1 FROM dispositivos_LoRa WHERE codigo_lora='$codigo'");
+                $res = $conn->query("SELECT 1 FROM dispositivos_Lora WHERE codigo_lora='$codigo'");
             } else {
                 $res = $conn->query("SELECT 1 FROM dispositivos_ESP32 WHERE codigo_esp32='$codigo'");
             }
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $ubicacion = $conn->real_escape_string($_POST['ubicacion']);
 
         if ($micro === 'LoRa') {
-            $stmt = $conn->prepare("INSERT INTO dispositivos_LoRa (codigo_lora, nombre_dispositivo, ubicacion, id_cliente, fecha_registro) VALUES (?, ?, ?, ?, NOW())");
+            $stmt = $conn->prepare("INSERT INTO dispositivos_Lora (codigo_lora, nombre_dispositivo, ubicacion, id_cliente, fecha_registro) VALUES (?, ?, ?, ?, NOW())");
             $stmt->bind_param("sssi", $codigo, $nombre, $ubicacion, $id_cliente);
         } elseif ($micro === 'ESP32') {
             $stmt = $conn->prepare("INSERT INTO dispositivos_ESP32 (codigo_esp32, nombre_dispositivo, ubicacion, id_cliente, fecha_registro) VALUES (?, ?, ?, ?, NOW())");
@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
         // Validar que el dispositivo exista
         if ($micro === 'LoRa') {
-            $res = $conn->query("SELECT id_lora FROM dispositivos_LoRa WHERE id_lora = $id_dispositivo AND id_cliente = $id_cliente");
+            $res = $conn->query("SELECT id_lora FROM dispositivos_Lora WHERE id_lora = $id_dispositivo AND id_cliente = $id_cliente");
         } else {
             $res = $conn->query("SELECT id_esp32 FROM dispositivos_ESP32 WHERE id_esp32 = $id_dispositivo AND id_cliente = $id_cliente");
         }
@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 }
 
 // Obtener dispositivos LoRa y ESP32 para el cliente (para mostrar en el select)
-$result_lora = $conn->query("SELECT id_lora, nombre_dispositivo, codigo_lora FROM dispositivos_LoRa WHERE id_cliente = $id_cliente");
+$result_lora = $conn->query("SELECT id_lora, nombre_dispositivo, codigo_lora FROM dispositivos_lora WHERE id_cliente = $id_cliente");
 $result_esp32 = $conn->query("SELECT id_esp32, nombre_dispositivo, codigo_esp32 FROM dispositivos_ESP32 WHERE id_cliente = $id_cliente");
 ?>
 

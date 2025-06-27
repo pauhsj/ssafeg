@@ -1,8 +1,9 @@
 <?php
 session_start();
+
 $servername = "localhost";
 $username = "u557447082_9x8vh";
-$password ="safegarden_bm9F8>y";
+$password ='$afegarden_bm9F8>y';
 $dbname = "u557447082_safegardendb";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -11,15 +12,26 @@ if ($conn->connect_error) {
 }
 
 $error = '';
+$loginSuccess = false;
 
-// Procesar formulario
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = trim($_POST["email"] ?? '');
-    $contrasena = trim($_POST["contraseña"] ?? '');
+    // Sanitización básica
+    $email_raw = $_POST["email"] ?? '';
+    $contrasena_raw = $_POST["contraseña"] ?? '';
 
+    // Sanitizar inputs
+    $email = filter_var(trim($email_raw), FILTER_SANITIZE_EMAIL);
+    $contrasena = trim($contrasena_raw);
+
+    // Validaciones servidor
     if (empty($email) || empty($contrasena)) {
         $error = "Por favor completa todos los campos.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "Correo electrónico inválido.";
+    } elseif (!preg_match("/^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[\W_]).{8,}$/", $contrasena)) {
+        $error = "La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, números y símbolos.";
     } else {
+        // Consulta al usuario usando sentencia preparada para evitar inyección
         $stmt = $conn->prepare("SELECT id_cliente, contraseña FROM usuario WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -31,9 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             if (password_verify($contrasena, $hash)) {
                 $_SESSION["id_cliente"] = $usuario["id_cliente"];
-                // Redirige directamente al dashboard (sin depender de JS)
-                header("Location: dashboard.php");
-                exit;
+                $loginSuccess = true;
             } else {
                 $error = "Contraseña incorrecta.";
             }
@@ -43,9 +53,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->close();
     }
 }
+
 $conn->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -57,40 +67,107 @@ $conn->close();
   <style>
     * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
     body, html { height: 100%; background: #e8f5e9; }
-    .container { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
     .card {
-      background: #fff; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      display: flex; flex-direction: column; width: 100%; max-width: 900px; overflow: hidden;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 900px;
+      overflow: hidden;
     }
-    @media (min-width: 768px) { .card { flex-direction: row; } }
+    @media (min-width: 768px) {
+      .card { flex-direction: row; }
+    }
     .left {
-      flex: 1; background-color: #dcedc8; display: flex; flex-direction: column; justify-content: center;
-      align-items: center; padding: 30px; text-align: center;
+      flex: 1;
+      background-color: #dcedc8;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+      text-align: center;
     }
-    .left img { width: 100%; max-width: 300px; border-radius: 10px; margin-bottom: 20px; }
-    .left h1 { font-size: 26px; color: #2e7d32; }
-    .right { flex: 1; padding: 40px; }
-    .right h2 { font-size: 24px; color: #2e7d32; margin-bottom: 10px; }
-    .right p { color: #666; font-size: 14px; margin-bottom: 20px; }
+    .left img {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .left h1 {
+      font-size: 26px;
+      color: #2e7d32;
+    }
+    .right {
+      flex: 1;
+      padding: 40px;
+    }
+    .right h2 {
+      font-size: 24px;
+      background: linear-gradient(to right, #2e7d32, #66bb6a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 10px;
+    }
+    .right p {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
     .form input {
-      width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
     }
     .form button {
-      width: 100%; padding: 12px; background-color: #388e3c; color: #fff;
-      border: none; border-radius: 6px; font-size: 16px; cursor: pointer; transition: background 0.3s ease;
-    }
-    .form button:hover { background-color: #2e7d32; }
-    .register { text-align: center; font-size: 14px; margin-top: 10px; }
-    .register a { color: #388e3c; text-decoration: none; }
-    .password-toggle {
-      position: relative;
-    }
-    .password-toggle i {
-      position: absolute;
-      right: 10px;
-      top: 13px;
+      width: 100%;
+      padding: 12px;
+      background-color: #388e3c;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
       cursor: pointer;
-      color: gray;
+      transition: background 0.3s ease;
+    }
+    .form button:hover {
+      background-color: #2e7d32;
+    }
+    .register {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    .register a {
+      color: #388e3c;
+      text-decoration: none;
+    }
+    .back-link {
+      text-align: center;
+      margin-top: 15px;
+    }
+    .back-link a {
+      text-decoration: none;
+      color: #2e7d32;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    .back-link a:hover {
+      color: #1b5e20;
     }
   </style>
 </head>
@@ -105,21 +182,21 @@ $conn->close();
     </div>
 
     <div class="right">
-      <form class="form" method="POST" id="loginForm">
+      <form class="form" method="POST" action="" id="loginForm" novalidate>
         <h2>¡Bienvenido de nuevo a SafeGarden!</h2>
         <p>Inicia sesión en tu cuenta</p>
 
         <input type="email" name="email" placeholder="Tu correo electrónico" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" />
-
-        <div class="password-toggle">
-          <input type="password" name="contraseña" id="contraseña" placeholder="Contraseña" required />
-          <i class="fa fa-eye" id="togglePassword"></i>
-        </div>
+        <input type="password" name="contraseña" placeholder="Contraseña" required />
 
         <button type="submit">Iniciar sesión</button>
 
         <div class="register">
           <p>¿No tienes cuenta? <a href="registrouser.php">Regístrate</a></p>
+        </div>
+
+        <div class="back-link">
+          <p><a href="index.html"><i class="fas fa-arrow-left"></i> Volver al inicio</a></p>
         </div>
       </form>
     </div>
@@ -128,29 +205,39 @@ $conn->close();
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  // Mostrar/ocultar contraseña
-  document.getElementById("togglePassword").addEventListener("click", function () {
-    const pwd = document.getElementById("contraseña");
-    const type = pwd.getAttribute("type") === "password" ? "text" : "password";
-    pwd.setAttribute("type", type);
-    this.classList.toggle("fa-eye");
-    this.classList.toggle("fa-eye-slash");
-  });
+  // Validación simple en cliente antes de enviar
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    const form = this;
+    const email = form.email.value.trim();
+    const password = form.contraseña.value.trim();
 
-  // Validación cliente
-  document.getElementById("loginForm").addEventListener("submit", function(e) {
-    const email = this.email.value.trim();
-    const contraseña = this.contraseña.value.trim();
-    if (!email || !contraseña) {
+    if (!email || !password) {
       e.preventDefault();
       Swal.fire({
         icon: 'warning',
-        title: 'Campos vacíos',
-        text: 'Por favor completa todos los campos.',
+        title: 'Campos incompletos',
+        text: 'Por favor llena todos los campos.',
+        confirmButtonColor: '#388e3c'
+      });
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      e.preventDefault();
+      Swal.fire({
+        icon: 'error',
+        title: 'Correo inválido',
+        text: 'Por favor ingresa un correo electrónico válido.',
+        confirmButtonColor: '#388e3c'
+      });
+    } else if (!/(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[\W_]).{8,}/.test(password)) {
+      e.preventDefault();
+      Swal.fire({
+        icon: 'error',
+        title: 'Contraseña inválida',
+        text: 'La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, números y símbolos.',
         confirmButtonColor: '#388e3c'
       });
     }
   });
+
   <?php if (!empty($error)): ?>
     Swal.fire({
       icon: 'error',
@@ -158,9 +245,18 @@ $conn->close();
       text: <?= json_encode($error) ?>,
       confirmButtonColor: '#388e3c'
     });
+  <?php elseif ($loginSuccess): ?>
+    Swal.fire({
+      icon: 'success',
+      title: '¡Bienvenido!',
+      text: 'Has iniciado sesión correctamente.',
+      timer: 2000,
+      timerProgressBar: true,
+      showConfirmButton: false,
+      didClose: () => { window.location.href = 'html/dashboard.php'; }
+    });
   <?php endif; ?>
-
 </script>
+
 </body>
 </html>
-

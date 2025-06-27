@@ -1,333 +1,498 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
-    <meta charset="utf-8">
-    <title>Sobre Nosotros</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="Free HTML Templates" name="keywords">
-    <meta content="Free HTML Templates" name="description">
-
-    <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon">
-
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"> 
-
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-
-    <!-- Libraries Stylesheet -->
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
-
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href="style.css" rel="stylesheet">
-</head>
-
-<link
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SafeGarden - Sobre Nosotros</title>
+  <link rel="icon" href="img/favicon.ico" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;800&display=swap"
     rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
   />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    rel="stylesheet"
+  />
+
+  <style>
+    body {
+      font-family: 'Urbanist', sans-serif;
+      background: radial-gradient(circle at 10% 20%, #e9fcec, #d2f0e0 60%, #b8e4cf);
+      color: #14532d;
+      overflow-x: hidden;
+    }
+
+    .navbar {
+      background-color: #fff;
+      border-bottom: 2px solid #28a74533;
+    }
+
+    .navbar-brand span {
+      color: #28a745;
+    }
+
+    .page-header {
+      background: linear-gradient(135deg, #b2f5ea 0%, #c6f6d5 100%);
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 3rem 3rem 0 0;
+      margin-bottom: 3rem;
+    }
+
+    .page-header h3 {
+      font-weight: 800;
+      color: #14532d;
+      font-size: 3rem;
+      text-transform: uppercase;
+    }
+
+    .page-header .breadcrumb-text {
+      color: #14532d;
+      margin-top: 0.5rem;
+      font-weight: 600;
+    }
+
+    .breadcrumb-text a {
+      color: #28a745;
+      text-decoration: none;
+    }
+
+    .breadcrumb-text a:hover {
+      text-decoration: underline;
+    }
+
+    .about-text {
+      background: #ffffffcc;
+      border-radius: 1.5rem;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+      padding: 3rem 2rem;
+      color: #14532d;
+    }
+
+    .about-text h6 {
+      color: #28a745;
+      letter-spacing: 5px;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    .about-text h1 {
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-text p {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      color: #2c3e50dd;
+    }
+
+    .about-text ul {
+      list-style: none;
+      padding-left: 0;
+      margin-bottom: 2rem;
+      color: #334e4d;
+    }
+
+    .about-text ul li {
+      margin-bottom: 0.8rem;
+      font-size: 1.1rem;
+    }
+
+    .about-text ul li::before {
+      content: "🔧";
+      margin-right: 0.5rem;
+    }
+
+    .about-text ul li:nth-child(2)::before {
+      content: "🌐";
+    }
+
+    .about-text ul li:nth-child(3)::before {
+      content: "🛡";
+    }
+
+    .about-text ul li:nth-child(4)::before {
+      content: "⚙";
+    }
+
+    .about-text img {
+      border-radius: 1rem;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      margin-bottom: 1rem;
+    }
+
+    .btn-primary {
+      background-color: #28a745;
+      border-color: #28a745;
+      font-weight: 600;
+      padding: 0.75rem 3rem;
+      border-radius: 2rem;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: #1e7a31;
+      border-color: #1e7a31;
+    }
+
+    /* Highlight section */
+    .about-highlight {
+      background-color: #ffffff;
+      color: #266148;
+      border-radius: 1.5rem;
+      padding: 3rem 2rem;
+      margin: 5rem 0;
+      box-shadow: 0 10px 25px rgba(40, 167, 69, 0.3);
+    }
+
+    .about-highlight h6 {
+      letter-spacing: 5px;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      color: #266148;
+    }
+
+    .about-highlight h1 {
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-highlight p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #266148;
+      margin-bottom: 2rem;
+    }
+
+    .about-highlight ul {
+      list-style: none;
+      padding-left: 0;
+      font-size: 1.1rem;
+      color: #266148;
+    }
+
+    .about-highlight ul li {
+      padding: 0.4rem 0;
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .about-highlight ul li i.fa-check {
+      position: absolute;
+      left: 0;
+      top: 3px;
+      color: #a9f0c1;
+    }
+
+    /* Team section */
+    .team-item {
+      background: #ffffffcc;
+      border-radius: 1.5rem;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+      transition: transform 0.3s ease;
+    }
+
+    .team-item:hover {
+      transform: translateY(-8px);
+    }
+
+    .team-img {
+      position: relative;
+      overflow: hidden;
+      border-top-left-radius: 1.5rem;
+      border-top-right-radius: 1.5rem;
+    }
+
+    .team-img img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+      border-top-left-radius: 1.5rem;
+      border-top-right-radius: 1.5rem;
+    }
+
+    .team-item:hover .team-img img {
+      transform: scale(1.1);
+    }
+
+    .team-social {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 15px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .team-item:hover .team-social {
+      opacity: 1;
+    }
+
+    .team-social a {
+      background: #28a745;
+      color: white;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      text-decoration: none;
+      font-size: 1.2rem;
+      box-shadow: 0 2px 10px rgba(40, 167, 69, 0.5);
+      transition: background-color 0.3s ease;
+    }
+
+    .team-social a:hover {
+      background-color: #1e7a31;
+    }
+
+    .team-item .text-center h5 {
+      margin-top: 1rem;
+      font-weight: 700;
+      color: #14532d;
+    }
+
+    .team-item .text-center p {
+      color: #3a3a3a;
+      margin-bottom: 1rem;
+    }
+
+    /* Footer */
+    footer {
+      background: #383938;
+      color: #d1fae5;
+      padding: 3rem 1rem;
+      margin-top: 4rem;
+    }
+
+    footer a {
+      color: #a7f3d0;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: white;
+    }
+
+    /* Back to top */
+    .btn-back-to-top {
+      width: 50px;
+      height: 50px;
+      background-color: #28a745;
+      border-radius: 50%;
+      color: white;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1050;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-back-to-top:hover {
+      background-color: #1e7a31;
+    }
+  </style>
 </head>
 
 <body>
-       <!-- Navbar Start -->
-    <div class="container-fluid position-relative nav-bar p-0">
-        <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
-            <nav class="navbar navbar-expand-lg bg-light navbar-light shadow-lg py-3 py-lg-0 pl-3 pl-lg-5">
-                <a href="inicio.html" class="navbar-brand">
-                    <h1 class="m-0 text-primary"><span class="text-dark">Safe</span>Garden</h1>
-                </a>
-                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
-                    <div class="navbar-nav ml-auto py-0">
-                        <a href="index.html" class="nav-item nav-link">Inicio</a>
-                        <a href="recursos.html" class="nav-item nav-link">Recursos</a>
-                        <a href="service.html" class="nav-item nav-link">Servicios</a>
-                        <a href="sobre.html" class="nav-item nav-link active">Sobre Nosotros</a>
-                        <a href="login.html"  class="nav-item nav-link"><i class="fa-solid fa-user-circle fa-lg"></i></a>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </div>
-    <!-- Navbar End -->
-
-
-    <!-- Header Start -->
-    <div class="container-fluid page-header">
-        <div class="container">
-            <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
-                <h3 class="display-4 text-white text-uppercase">Sobre Nosotros</h3>
-                <div class="d-inline-flex text-white">
-                    <p class="m-0 text-uppercase"><a class="text-white" href="inicio.html">Inicio</a></p>
-                    <i class="fa fa-angle-double-right pt-1 px-3"></i>
-                    <p class="m-0 text-uppercase">Sobre Nosotros</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Header End -->
-
-
-<!-- About Start -->
-<div class="container-fluid py-5">
-  <div class="container pt-5">
-    <div class="row">
-      <!-- Imagen -->
-      <div class="col-lg-6" style="min-height: 500px;">
-        <div class="position-relative h-100">
-          <img
-            class="position-absolute w-100 h-100"
-            src="https://blog.universidaduk.com/wp-content/uploads/2023/12/hackerditouk_A_team_of_25_year_old_Latino_spies_programming._So_e9fba16b-9dce-4032-bb9e-99f087c0e25c-1024x574.webp"
-            alt="Equipo SafeGarden"
-            style="object-fit: cover;"
-          >
-        </div>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="inicio.html">
+        <h2><span>Safe</span>Garden</h2>
+      </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navmenu"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navmenu">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a href="index.html" class="nav-link">Inicio</a></li>
+          <li class="nav-item"><a href="recursos.html" class="nav-link">Recursos</a></li>
+          <li class="nav-item"><a href="service.html" class="nav-link">Servicios</a></li>
+          <li class="nav-item"><a href="sobre.html" class="nav-link active">Sobre Nosotros</a></li>
+          <li class="nav-item">
+            <a href="login.php" class="nav-link"
+              ><i class="fa-solid fa-user-circle"></i
+            ></a>
+          </li>
+        </ul>
       </div>
-      <!-- Texto -->
-      <div class="col-lg-6 pt-5 pb-lg-5">
-        <div class="about-text bg-white p-4 p-lg-5 my-lg-5">
-          <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">
-            Sobre Nosotros
-          </h6>
-          <h1 class="mb-3">
-            Ingenieros en Sistemas al servicio de tu huerto
-          </h1>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <section class="page-header container-fluid ">
+    <div class="container text-center">
+      <h3>Sobre Nosotros</h3>
+      <div class="breadcrumb-text">
+        <a href="inicio.html">Inicio</a> &nbsp; &gt; &nbsp; Sobre Nosotros
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="container py-5">
+    <div class="row g-5 align-items-center">
+      <div class="col-lg-6" style="min-height: 500px;">
+        <img
+          src="https://blog.universidaduk.com/wp-content/uploads/2023/12/hackerditouk_A_team_of_25_year_old_Latino_spies_programming._So_e9fba16b-9dce-4032-bb9e-99f087c0e25c-1024x574.webp"
+          alt="Equipo SafeGarden"
+          style="width:100%; height: 500px; object-fit: cover; border-radius: 1.5rem; box-shadow: 0 8px 20px rgb(0 0 0 / 0.1);"
+        />
+      </div>
+      <div class="col-lg-6">
+        <div class="about-text">
+          <h6>Sobre Nosotros</h6>
+          <h1>Ingenieros en Sistemas al servicio de tu huerto</h1>
           <p>
             En <strong>SafeGarden</strong> somos profesionales titulados en Ingeniería en Sistemas,
             apasionados por la tecnología aplicada al agro. Combinamos experiencias en:
           </p>
-          <ul class="mb-4">
-            <li>🔧 Desarrollo e integración de plataformas web </li>
-            <li>🌐 Arquitectura de Internet de las Cosas y redes seguras</li>
-            <li>🛡 Ciberseguridad y protección de datos</li>
-            <li>⚙️ Automatización y mantenimiento de sistemas embebidos</li>
+          <ul>
+            <li>Desarrollo e integración de plataformas web</li>
+            <li>Arquitectura de Internet de las Cosas y redes seguras</li>
+            <li>Ciberseguridad y protección de datos</li>
+            <li>Automatización y mantenimiento de sistemas embebidos</li>
           </ul>
-          <div class="row mb-4">
+          <div class="row g-3 mb-4">
             <div class="col-6">
-              <img class="img-fluid rounded" src="https://imagenes.elpais.com/resizer/v2/BL5MFK6ABJL6FOJTRLZJNJBFQY.jpg?auth=f073738a401e5bef64059a7eaa19d361b1aa6b9323f33ea3a6a3c2d6a77b599c&width=414" alt="Panel de control">
+              <img
+                src="https://imagenes.elpais.com/resizer/v2/BL5MFK6ABJL6FOJTRLZJNJBFQY.jpg?auth=f073738a401e5bef64059a7eaa19d361b1aa6b9323f33ea3a6a3c2d6a77b599c&width=414"
+                alt="Panel de control"
+                style="width: 100%; border-radius: 1rem; box-shadow: 0 6px 15px rgba(0,0,0,0.1);"
+              />
             </div>
             <div class="col-6">
-              <img class="img-fluid rounded" src="https://www.syngenta.com.mx/sites/g/files/kgtney1381/files/styles/main_media_large/public/media/image/2017/12/15/14dic_mitos_700x400.jpg?itok=bKHrzVup" alt="Sensor IoT">
+              <img
+                src="https://www.syngenta.com.mx/sites/g/files/kgtney1381/files/styles/main_media_large/public/media/image/2017/12/15/14dic_mitos_700x400.jpg?itok=bKHrzVup"
+                alt="Sensor IoT"
+                style="width: 100%; border-radius: 1rem; box-shadow: 0 6px 15px rgba(0,0,0,0.1);"
+              />
             </div>
           </div>
-          <a href="contacto.html" class="btn btn-primary mt-1">
-            Contáctanos
-          </a>
+          <a href="contacto.html" class="btn btn-primary">Contáctanos</a>
         </div>
       </div>
     </div>
-  </div>
-</div>
-<!-- About End -->
+  </section>
 
-<!-- About Highlight Start -->
-<div class="container-fluid bg-primary text-white py-5" style="margin: 90px 0;">
-  <div class="container py-5">
+  <!-- About Highlight -->
+  <section class="about-highlight container py-5">
     <div class="row align-items-center">
-      <!-- Texto Sobre Nosotros -->
       <div class="col-lg-7 mb-5 mb-lg-0">
-        <div class="mb-4">
-          <h6 class="text-light text-uppercase" style="letter-spacing: 5px;">Sobre Nosotros</h6>
-          <h1 class="text-white">Ingenieros en Sistemas al Servicio de tu Huerto</h1>
-        </div>
-        <p class="text-white mb-4">
+        <h6>Sobre Nosotros</h6>
+        <h1>Ingenieros en Sistemas al Servicio de tu Huerto</h1>
+        <p>
           En <strong>SafeGarden</strong> somos un equipo de profesionales en Ingeniería en Sistemas
           apasionados por la innovación agrícola. Creamos soluciones tecnológicas integrales
           para:
         </p>
-        <ul class="list-unstyled text-white">
-          <li class="py-2"><i class="fa fa-check text-light mr-3"></i>Monitoreo inteligente 24/7</li>
-          <li class="py-2"><i class="fa fa-check text-light mr-3"></i>Ciberseguridad y redes seguras</li>
-          <li class="py-2"><i class="fa fa-check text-light mr-3"></i>Desarrollo web responsivo</li>
-          <li class="py-2"><i class="fa fa-check text-light mr-3"></i>Automatización y mantenimiento</li>
+        <ul>
+          <li><i class="fa fa-check"></i> Monitoreo inteligente 24/7</li>
+          <li><i class="fa fa-check"></i> Ciberseguridad y redes seguras</li>
+          <li><i class="fa fa-check"></i> Desarrollo web responsivo</li>
+          <li><i class="fa fa-check"></i> Automatización y mantenimiento</li>
         </ul>
       </div>
-      <!-- Imagen o Gráfico Representativo -->
       <div class="col-lg-5">
-        <img src="https://azadaverde.org/wp-content/uploads/2023/09/agricultura-sostenible-comunidades.jpg" alt="Equipo SafeGarden" class="img-fluid rounded">
+        <img
+          src="https://azadaverde.org/wp-content/uploads/2023/09/agricultura-sostenible-comunidades.jpg"
+          alt="Equipo SafeGarden"
+          style="width: 100%; border-radius: 1.5rem; box-shadow: 0 8px 20px rgb(0 0 0 / 0.1);"
+        />
       </div>
     </div>
-  </div>
-</div>
-<!-- About Highlight End -->
+  </section>
 
 
 
-<!-- Team Start -->
-<div class="container-fluid py-5">
-  <div class="container pt-5 pb-3">
-    <div class="text-center mb-3 pb-3">
-      <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Nuestro Equipo</h6>
-      <h1>Conoce al Equipo Scrum</h1>
-    </div>
-    <div class="row">
-      <!-- Patrick Zaid Castro Gatica – Product Owner -->
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-2">
-        <div class="team-item bg-white mb-4">
-          <div class="team-img position-relative overflow-hidden">
-            <img class="img-fluid w-100" src="img/testimonial-3.jpg" alt="Patrick Zaid Castro Gatica">
-            <div class="team-social">
-              <a class="btn btn-outline-primary btn-square" href="#"><i class="fab fa-facebook-f"></i></a>
-              <a class="btn btn-outline-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-          <div class="text-center py-4">
-            <h5 class="text-truncate">Patrick Zaid Castro</h5>
-            <p class="m-0">Product Owner</p>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 mb-4">
+          <a href="#" class="navbar-brand">
+            <h2><span>Safe</span>Garden</h2>
+          </a>
+          <p>
+            Soluciones integrales para proteger y monitorear tu huerto con tecnología IoT
+            y ciberseguridad.
+          </p>
+          <h6 class="text-uppercase mt-4 mb-3" style="letter-spacing: 5px;">
+            Síguenos
+          </h6>
+          <div class="d-flex gap-2">
+            <a class="btn btn-outline-success btn-square" href="#"><i class="fab fa-facebook-f"></i></a>
+            <a class="btn btn-outline-success btn-square" href="#"><i class="fab fa-instagram"></i></a>
           </div>
         </div>
-      </div>
-      <!-- Paulina Elizabeth Silva Hernández – Scrum Master -->
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-2">
-        <div class="team-item bg-white mb-4">
-          <div class="team-img position-relative overflow-hidden">
-            <img class="img-fluid w-100" src="img/team-3.jpg" alt="Paulina Elizabeth Silva Hernández">
-            <div class="team-social">
-              <a class="btn btn-outline-primary btn-square" href="#"><i class="fab fa-facebook-f"></i></a>
-              <a class="btn btn-outline-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-          <div class="text-center py-4">
-            <h5 class="text-truncate">Paulina E. Silva</h5>
-            <p class="m-0">Scrum Master</p>
-          </div>
+        <div class="col-md-3 mb-4">
+          <h5 class="text-uppercase mb-3" style="letter-spacing: 5px;">Servicios</h5>
+          <ul class="list-unstyled text-muted">
+            <li><a href="#" class="text-muted text-decoration-none">Ciberseguridad</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Desarrollo de Software</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Internet de las Cosas</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Soporte Técnico</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4">
+          <h5 class="text-uppercase mb-3" style="letter-spacing: 5px;">Enlaces</h5>
+          <ul class="list-unstyled text-muted">
+            <li><a href="inicio.html" class="text-muted text-decoration-none">Inicio</a></li>
+            <li><a href="recursos.html" class="text-muted text-decoration-none">Recursos</a></li>
+            <li><a href="service.html" class="text-muted text-decoration-none">Servicios</a></li>
+            <li><a href="sobre.html" class="text-muted text-decoration-none">Sobre Nosotros</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-4">
+          <h5 class="text-uppercase mb-3" style="letter-spacing: 5px;">Contacto</h5>
+          <p><i class="fa fa-envelope me-2"></i>safegarden@gmail.com</p>
+          <p><i class="fa fa-phone-alt me-2"></i>+52 624 156 6830</p>
         </div>
       </div>
-      <!-- Alejandro Suarez Casimiro – Scrum Team Member -->
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-2">
-        <div class="team-item bg-white mb-4">
-          <div class="team-img position-relative overflow-hidden">
-            <img class="img-fluid w-100" src="img/team-2.jpg" alt="Alejandro Suarez Casimiro">
-            <div class="team-social">
-              <a class="btn btn-outline-primary btn-square" href="#"><i class="fab fa-facebook-f"></i></a>
-              <a class="btn btn-outline-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-          <div class="text-center py-4">
-            <h5 class="text-truncate">Alejandro Suarez</h5>
-            <p class="m-0">Scrum Team Member</p>
-          </div>
-        </div>
-      </div>
-      <!-- David Gomez Medina – Scrum Team Member -->
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-2">
-        <div class="team-item bg-white mb-4">
-          <div class="team-img position-relative overflow-hidden">
-            <img class="img-fluid w-100" src="img/team-4.jpg" alt="David Gomez Medina">
-            <div class="team-social">
-              <a class="btn btn-outline-primary btn-square" href="#"><i class="fab fa-facebook-f"></i></a>
-              <a class="btn btn-outline-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-          <div class="text-center py-4">
-            <h5 class="text-truncate">David Gomez Medina</h5>
-            <p class="m-0">Scrum Team Member</p>
-          </div>
-        </div>
-      </div>
-      <!-- Carlos Raul Lopez Arellano – Scrum Team Member -->
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-2">
-        <div class="team-item bg-white mb-4">
-          <div class="team-img position-relative overflow-hidden">
-            <img class="img-fluid w-100" src="img/user.jpg" alt="Carlos Raul Lopez Arellano">
-            <div class="team-social">
-              <a class="btn btn-outline-primary btn-square" href="https://www.facebook.com/santos.ruly.2025"><i class="fab fa-facebook-f"></i></a>
-              <a class="btn btn-outline-primary btn-square" href="https://www.instagram.com/rulysantos890"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-          <div class="text-center py-4">
-            <h5 class="text-truncate">Carlos R. Lopez</h5>
-            <p class="m-0">Scrum Team Member</p>
-          </div>
-        </div>
+      <div class="text-center pt-3 border-top border-success border-opacity-25">
+        <small>© 2025 SafeGarden. Todos los derechos reservados.</small><br />
+        <small>Diseñado con ❤ por el equipo SafeGarden</small>
       </div>
     </div>
-  </div>
-</div>
-<!-- Team End -->
+  </footer>
 
-<!-- Footer Start -->
-<div class="container-fluid bg-dark text-white-50 py-5 px-sm-3 px-lg-5" style="margin-top: 90px;">
-  <div class="row pt-5">
-    <!-- Marca y descripción -->
-    <div class="col-lg-3 col-md-6 mb-5">
-      <a href="" class="navbar-brand">
-        <h1 class="text-primary"><span class="text-white">Safe</span>Garden</h1>
-      </a>
-      <p>Soluciones integrales para proteger y monitorear tu huerto con tecnología IoT y ciberseguridad.</p>
-      <h6 class="text-white text-uppercase mt-4 mb-3" style="letter-spacing: 5px;">Síguenos</h6>
-      <div class="d-flex justify-content-start">
-        <a class="btn btn-outline-primary btn-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
-        <a class="btn btn-outline-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
-      </div>
-    </div>
-    <!-- Servicios -->
-    <div class="col-lg-3 col-md-6 mb-5">
-      <h5 class="text-white text-uppercase mb-4" style="letter-spacing: 5px;">Servicios</h5>
-      <div class="d-flex flex-column justify-content-start">
-        <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Ciberseguridad</a>
-        <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Desarrollo de Software</a>
-        <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Internet de las Cosas</a>
-        <a class="text-white-50" href="#"><i class="fa fa-angle-right mr-2"></i>Soporte Técnico</a>
-      </div>
-    </div>
-    <!-- Enlaces útiles -->
-    <div class="col-lg-3 col-md-6 mb-5">
-      <h5 class="text-white text-uppercase mb-4" style="letter-spacing: 5px;">Enlaces</h5>
-      <div class="d-flex flex-column justify-content-start">
-        <a class="text-white-50 mb-2" href="inicio.html"><i class="fa fa-angle-right mr-2"></i>Inicio</a>
-        <a class="text-white-50 mb-2" href="recursos.html"><i class="fa fa-angle-right mr-2"></i>Recursos</a>
-        <a class="text-white-50 mb-2" href="service.html"><i class="fa fa-angle-right mr-2"></i>Servicios</a>
-        <a class="text-white-50" href="sobre.html"><i class="fa fa-angle-right mr-2"></i>Sobre Nosotros</a>
-      </div>
-    </div>
-    <!-- Contacto y newsletter -->
-    <div class="col-lg-3 col-md-6 mb-5">
-      <h5 class="text-white text-uppercase mb-4" style="letter-spacing: 5px;">Contacto</h5>
-      <p><i class="fa fa-envelope mr-2"></i>safegarden@gmail.com</p>
-      <p><i class="fa fa-phone-alt mr-2"></i>+52 624 156 6830</p>
-      
-    </div>
-  </div>
-</div>
-<div class="container-fluid bg-dark text-white border-top py-4 px-sm-3 px-md-5" style="border-color: rgba(256,256,256,.1) !important;">
-  <div class="row">
-    <div class="col-lg-6 text-center text-md-left mb-3 mb-md-0">
-      <p class="m-0 text-white-50">© 2025 SafeGarden. Todos los derechos reservados.</p>
-    </div>
-    <div class="col-lg-6 text-center text-md-right">
-      <p class="m-0 text-white-50">Diseñado con ❤ por el equipo SafeGarden</p>
-    </div>
-  </div>
-</div>
-<!-- Footer End -->
+  <!-- Back to top -->
+  <button
+    class="btn-back-to-top"
+    aria-label="Back to top"
+    onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+  >
+    <i class="fa fa-angle-up"></i>
+  </button>
 
-
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="fa fa-angle-double-up"></i></a>
-
-
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="lib/tempusdominus/js/moment.min.js"></script>
-    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-
-    <!-- Contact Javascript File -->
-    <script src="mail/jqBootstrapValidation.min.js"></script>
-    <script src="mail/contact.js"></script>
-
-    <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

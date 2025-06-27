@@ -13,9 +13,9 @@ $humedad = $_GET['humedad'] ?? null;
 $id_sensor = $_GET['id_sensor'] ?? null; // <- Nuevo
 
 if ($temperatura !== null && $humedad !== null && $id_sensor !== null) {
-    $stmt = $conexion->prepare("INSERT INTO registros (id_sensor, temperatura, humedad, fecha_registro) VALUES (?, ?, ?, NOW())");
+    $stmt = $conn->prepare("INSERT INTO registros (id_sensor, temperatura, humedad, fecha_registro) VALUES (?, ?, ?, NOW())");
     if ($stmt === false) {
-        die("Error en prepare: " . $conexion->error);
+        die("Error en prepare: " . $conn->error);
     }
 
     $stmt->bind_param("idd", $id_sensor, $temperatura, $humedad);
@@ -31,5 +31,5 @@ if ($temperatura !== null && $humedad !== null && $id_sensor !== null) {
     echo " Faltan parámetros: temperatura, humedad o id_sensor.";
 }
 
-$conexion->close();
+$conn->close();
 ?>

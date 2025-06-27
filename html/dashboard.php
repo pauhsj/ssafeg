@@ -20,13 +20,6 @@ if (!isset($_SESSION['id_cliente'])) {
 
 $id_cliente = $_SESSION['id_cliente'];
 
-
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
-}
-
 // Obtener sensores junto con dispositivo y últimos datos asociados
 $sqlSensores = "
     SELECT s.*, 

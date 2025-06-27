@@ -319,7 +319,7 @@ if ($result && $result->num_rows > 0) {
         <!-- registro sensosr -->
         <li class="menu-item">
         <a href="addsensor.php" class="menu-link">
-        <i class="menu-icon tf-icons bx bx-arrow-out-left-square-half"></i> 
+        <i class="menu-icon tf-icons bx bx-file"></i>
         <div data-i18n="registrar sensor">Registrar sensor</div>
       </a>
     </li>

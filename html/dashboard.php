@@ -28,18 +28,19 @@ $sqlsensores = "
     SELECT s.*, 
            d.nombre_dispositivo AS micro_nombre,
            d.ubicacion AS ubicacion_dispositivo,
-           -- Última temperatura para sensor DHT11
            (SELECT temperatura FROM registros r WHERE r.id_sensor = s.id_sensor ORDER BY r.fecha DESC LIMIT 1) AS ultima_temp,
-           -- Última humedad para sensor DHT11
            (SELECT humedad FROM registros r WHERE r.id_sensor = s.id_sensor ORDER BY r.fecha DESC LIMIT 1) AS ultima_hum,
-           -- Conteo de eventos hoy para sensor de movimiento
            (SELECT COUNT(*) FROM sensor_movimiento m WHERE m.id_sensor = s.id_sensor AND DATE(m.fecha) = CURDATE()) AS eventos_hoy
-    FROM Sensores s
-    INNER JOIN Dispositivos_LoRa d ON s.id_dispositivo = d.id_lora
-    WHERE d.id_cliente = $id_cliente
+    FROM sensores s
+    INNER JOIN dispositivos_lora d ON s.id_dispositivo = d.id_lora
+    WHERE d.id_cliente = ?
 ";
 
-$resultSensores = $conn->query($sqlSensores);
+$stmt = $conn->prepare($sqlsensores);
+$stmt->bind_param("i", $id_cliente);
+$stmt->execute();
+$resultSensores = $stmt->get_result();
+
 $sensores = [];
 if ($resultSensores && $resultSensores->num_rows > 0) {
     while ($row = $resultSensores->fetch_assoc()) {

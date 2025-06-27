@@ -14,7 +14,6 @@ if (!isset($_SESSION["id_cliente"])) {
     exit;
 }
 
-
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Error de conexión: " . $conn->connect_error);
@@ -45,54 +44,74 @@ $conn->close();
   <title>Mi Perfil | SafeGarden</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
   <style>
-    * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
-    body, html { height: 100%; background: #f1f8e9; }
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      height: 100%;
+      background: #e8f5e9;
+    }
     .container {
       display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      padding: 20px;
       justify-content: center;
       align-items: center;
+      padding: 40px 20px;
+      min-height: 100vh;
     }
     .card {
       background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
       width: 100%;
       max-width: 600px;
-      overflow: hidden;
-      padding: 30px;
+      padding: 40px 30px;
+      position: relative;
+    }
+    .profile-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #66bb6a;
+      display: block;
+      margin: 0 auto 20px;
     }
     h1 {
-      font-size: 26px;
-      background: linear-gradient(to right, #2e7d32, #66bb6a);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      color: transparent;
+      font-size: 28px;
+      color: #2e7d32;
       text-align: center;
       margin-bottom: 25px;
     }
     .info {
-      margin-bottom: 15px;
-      font-size: 16px;
+      margin-bottom: 16px;
+      font-size: 17px;
+      color: #333;
     }
     .info strong {
-      color: #2e7d32;
+      color: #388e3c;
     }
     .back-link {
       text-align: center;
-      margin-top: 15px;
+      margin-top: 20px;
     }
     .back-link a {
       text-decoration: none;
       color: #2e7d32;
       font-weight: bold;
-      transition: color 0.3s;
+      transition: 0.3s;
     }
     .back-link a:hover {
       color: #1b5e20;
+    }
+    .upload-section {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .upload-section input[type="file"] {
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -100,6 +119,16 @@ $conn->close();
   <div class="container">
     <div class="card">
       <h1>Mi Perfil</h1>
+      <img src="uploads/default.png" alt="Foto de perfil" class="profile-img" id="fotoPerfil">
+
+      <div class="upload-section">
+        <form method="POST" action="subir_foto.php" enctype="multipart/form-data">
+          <input type="file" name="foto" accept="image/*" required>
+          <br>
+          <button type="submit">Subir Foto</button>
+        </form>
+      </div>
+
       <div class="info"><strong>Nombre:</strong> <?= htmlspecialchars($usuario["nombre"]) ?></div>
       <div class="info"><strong>Correo:</strong> <?= htmlspecialchars($usuario["email"]) ?></div>
       <div class="info"><strong>Teléfono:</strong> <?= htmlspecialchars($usuario["telefono"]) ?></div>

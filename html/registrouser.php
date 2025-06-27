@@ -4,10 +4,8 @@ session_start();
 $error = '';
 $success = '';
 
-$servername = "localhost";
-$username = "u557447082_9x8vh";
-$password = "safegarden_bm9F8>y";
-$dbname = "u557447082_safegardendb";
+include 'conexion.php';
+
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {

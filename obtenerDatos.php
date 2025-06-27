@@ -2,11 +2,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
-$servername = "localhost";
-$username = "u557447082_9x8vh";
-$password = "safegarden_bm9F8>y";
-$dbname = "u557447082_safegardendb";
+require_once 'html/conexion.php';
 
 
 $conn = new mysqli($servername, $username, $password, $dbname);

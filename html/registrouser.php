@@ -3,36 +3,45 @@ session_start();
 
 $error = '';
 $success = '';
+
 $servername = "localhost";
 $username = "u557447082_9x8vh";
-$password ="safegarden_bm9F8>y";
+$password = "safegarden_bm9F8>y";
 $dbname = "u557447082_safegardendb";
 
+// Conexión a la base de datos
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nombre     = trim($_POST['nombre'] ?? '');
-    $email      = trim($_POST['email'] ?? '');
-    $contraseña = trim($_POST['contraseña'] ?? '');
-    $telefono   = trim($_POST['telefono'] ?? '');
-    $ciudad     = trim($_POST['ciudad'] ?? '');
+// Limpiar y validar entradas
+function limpiar($dato) {
+    return htmlspecialchars(trim($dato), ENT_QUOTES, 'UTF-8');
+}
 
-    // Validación básica + avanzada
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nombre     = limpiar($_POST['nombre'] ?? '');
+    $email      = limpiar($_POST['email'] ?? '');
+    $contraseña = $_POST['contraseña'] ?? ''; // sin limpiar aún para permitir símbolos
+    $telefono   = limpiar($_POST['telefono'] ?? '');
+    $ciudad     = limpiar($_POST['ciudad'] ?? '');
+
+    // Validaciones
     if (!$nombre || !$email || !$contraseña || !$telefono || !$ciudad) {
         $error = "Por favor completa todos los campos.";
     } elseif (!preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/", $nombre)) {
         $error = "El nombre solo puede contener letras y espacios.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Correo electrónico no es válido.";
-    
+    } elseif (!preg_match("/^\d{10}$/", $telefono)) {
         $error = "El teléfono debe contener exactamente 10 números.";
     } elseif (!preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/", $ciudad)) {
         $error = "La ciudad solo puede contener letras y espacios.";
+    } elseif (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/", $contraseña)) {
+        $error = "La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y símbolos.";
     } else {
-        // Verificar si email ya existe
+        // Verificar si el correo ya está registrado
         $checkSql = "SELECT id_cliente FROM usuario WHERE email = ?";
         $checkStmt = $conn->prepare($checkSql);
         $checkStmt->bind_param("s", $email);
@@ -42,13 +51,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($checkResult->num_rows > 0) {
             $error = "Este correo ya está registrado.";
         } else {
-            // Hashear contraseña
+            // Hashear la contraseña
             $passHasheada = password_hash($contraseña, PASSWORD_DEFAULT);
 
-            $insertSql = "INSERT INTO usuario (nombre, email, contraseña, telefono, ciudad, creado_en) VALUES (?, ?, ?, ?, ?, NOW())";
+            // Insertar nuevo usuario
+            $insertSql = "INSERT INTO usuario (nombre, email, contraseña, telefono, ciudad, creado_en) 
+                          VALUES (?, ?, ?, ?, ?, NOW())";
             $stmt = $conn->prepare($insertSql);
             if (!$stmt) {
-                $error = "Error en la preparación de consulta: " . $conn->error;
+                $error = "Error en la preparación de la consulta: " . $conn->error;
             } else {
                 $stmt->bind_param("sssss", $nombre, $email, $passHasheada, $telefono, $ciudad);
                 if ($stmt->execute()) {
@@ -208,78 +219,43 @@ $conn->close();
 
     if (!nombre || !email || !contraseña || !telefono || !ciudad) {
       e.preventDefault();
-      Swal.fire({
-        icon: 'warning',
-        title: 'Campos incompletos',
-        text: 'Por favor llena todos los campos.',
-        confirmButtonColor: '#388e3c'
-      });
+      Swal.fire({ icon: 'warning', title: 'Campos incompletos', text: 'Por favor llena todos los campos.', confirmButtonColor: '#388e3c' });
       return;
     }
 
     if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(nombre)) {
       e.preventDefault();
-      Swal.fire({
-        icon: 'error',
-        title: 'Nombre inválido',
-        text: 'El nombre solo puede contener letras y espacios.',
-        confirmButtonColor: '#388e3c'
-      });
+      Swal.fire({ icon: 'error', title: 'Nombre inválido', text: 'El nombre solo puede contener letras y espacios.', confirmButtonColor: '#388e3c' });
       return;
     }
 
     if (!/\S+@\S+\.\S+/.test(email)) {
       e.preventDefault();
-      Swal.fire({
-        icon: 'error',
-        title: 'Correo inválido',
-        text: 'Por favor ingresa un correo electrónico válido.',
-        confirmButtonColor: '#388e3c'
-      });
+      Swal.fire({ icon: 'error', title: 'Correo inválido', text: 'Por favor ingresa un correo electrónico válido.', confirmButtonColor: '#388e3c' });
       return;
     }
 
-    if (!/^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[\W_]).{8,}$/.test(contraseña)) {
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(contraseña)) {
       e.preventDefault();
-      Swal.fire({
-        icon: 'error',
-        title: 'Contraseña débil',
-        html: 'La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, números y símbolos.',
-        confirmButtonColor: '#388e3c'
-      });
+      Swal.fire({ icon: 'error', title: 'Contraseña débil', html: 'La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, números y símbolos.', confirmButtonColor: '#388e3c' });
       return;
     }
 
     if (!/^\d{10}$/.test(telefono)) {
       e.preventDefault();
-      Swal.fire({
-        icon: 'error',
-        title: 'Teléfono inválido',
-        text: 'El teléfono debe contener exactamente 10 números.',
-        confirmButtonColor: '#388e3c'
-      });
+      Swal.fire({ icon: 'error', title: 'Teléfono inválido', text: 'El teléfono debe contener exactamente 10 números.', confirmButtonColor: '#388e3c' });
       return;
     }
 
     if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(ciudad)) {
       e.preventDefault();
-      Swal.fire({
-        icon: 'error',
-        title: 'Ciudad inválida',
-        text: 'La ciudad solo puede contener letras y espacios.',
-        confirmButtonColor: '#388e3c'
-      });
+      Swal.fire({ icon: 'error', title: 'Ciudad inválida', text: 'La ciudad solo puede contener letras y espacios.', confirmButtonColor: '#388e3c' });
       return;
     }
   });
 
   <?php if ($error): ?>
-    Swal.fire({
-      icon: 'error',
-      title: '¡Oops!',
-      text: <?= json_encode($error) ?>,
-      confirmButtonColor: '#388e3c'
-    });
+    Swal.fire({ icon: 'error', title: '¡Oops!', text: <?= json_encode($error) ?>, confirmButtonColor: '#388e3c' });
   <?php elseif ($success): ?>
     Swal.fire({
       icon: 'success',

@@ -126,3 +126,5 @@ CREATE TABLE Sensores (
 );
 ALTER TABLE sensor_movimiento ADD id_sensor INT;
 ALTER TABLE registros ADD id_sensor INT;
+
+ALTER TABLE registros ADD CONSTRAINT fk_sensor FOREIGN KEY (id_sensor) REFERENCES Sensores(id_sensor);

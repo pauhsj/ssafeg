@@ -136,7 +136,7 @@ $conn->close();
       <div class="info"><strong>Fecha de Registro:</strong> <?= htmlspecialchars($usuario["creado_en"]) ?></div>
 
       <div class="back-link">
-        <p><a href="html/dashboard.php"><i class="fas fa-arrow-left"></i> Volver al panel</a></p>
+        <p><a href="dashboard.php"><i class="fas fa-arrow-left"></i> Volver al panel</a></p>
       </div>
     </div>
   </div>

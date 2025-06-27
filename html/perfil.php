@@ -121,13 +121,7 @@ $conn->close();
       <h1>Mi Perfil</h1>
       <img src="uploads/default.png" alt="Foto de perfil" class="profile-img" id="fotoPerfil">
 
-      <div class="upload-section">
-        <form method="POST" action="subir_foto.php" enctype="multipart/form-data">
-          <input type="file" name="foto" accept="image/*" required>
-          <br>
-          <button type="submit">Subir Foto</button>
-        </form>
-      </div>
+      
 
       <div class="info"><strong>Nombre:</strong> <?= htmlspecialchars($usuario["nombre"]) ?></div>
       <div class="info"><strong>Correo:</strong> <?= htmlspecialchars($usuario["email"]) ?></div>

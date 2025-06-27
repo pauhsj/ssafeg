@@ -1,33 +1,10 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-session_start();
-$servername = "localhost";
-$username = "u557447082_9x8vh";
-$password ="safegarden_bm9F8>y";
-$dbname = "u557447082_safegardendb";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Verificar la conexión
-if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
-}
-
-// Validar sesión
-if (!isset($_SESSION['id_cliente'])) {
-    header("Location: login.php");
-    exit();
-}
-
-$id_cliente = $_SESSION['id_cliente'];
-
-// Obtener sensores junto con dispositivo y últimos datos asociados
-$sqlsensores = "
+// Obtener sensores LoRa
+$sqlLoRa = "
     SELECT s.*, 
            d.nombre_dispositivo AS micro_nombre,
            d.ubicacion AS ubicacion_dispositivo,
+           'LoRa' AS tipo_microcontrolador,
            (SELECT temperatura FROM registros r WHERE r.id_sensor = s.id_sensor ORDER BY r.fecha DESC LIMIT 1) AS ultima_temp,
            (SELECT humedad FROM registros r WHERE r.id_sensor = s.id_sensor ORDER BY r.fecha DESC LIMIT 1) AS ultima_hum,
            (SELECT COUNT(*) FROM sensor_movimiento m WHERE m.id_sensor = s.id_sensor AND DATE(m.fecha) = CURDATE()) AS eventos_hoy
@@ -36,85 +13,34 @@ $sqlsensores = "
     WHERE d.id_cliente = ?
 ";
 
-$stmt = $conn->prepare($sqlsensores);
-$stmt->bind_param("i", $id_cliente);
-$stmt->execute();
-$resultSensores = $stmt->get_result();
-
-$sensores = [];
-if ($resultSensores && $resultSensores->num_rows > 0) {
-    while ($row = $resultSensores->fetch_assoc()) {
-        $sensores[] = $row;
-    }
-}
-
-// Consulta rápida de estadísticas generales
-$estadisticas = [
-  'total_sensores' => 0,
-  'total_lora' => 0,
-  'total_esp32' => 0,
-  'eventos_hoy' => 0,
-  'temp_promedio' => 0,
-  'hum_promedio' => 0
-];
-
-// Total sensores
-$res = $conn->query("SELECT COUNT(*) AS total FROM sensores WHERE id_dispositivo IN 
-  (SELECT id_lora FROM dispositivos_lora WHERE id_cliente = $id_cliente) 
-  OR id_dispositivo IN 
-  (SELECT id_esp32 FROM dispositivos_esp32 WHERE id_cliente = $id_cliente)");
-$estadisticas['total_sensores'] = $res->fetch_assoc()['total'] ?? 0;
-
-// Dispositivos LoRa
-$res = $conn->query("SELECT COUNT(*) AS total FROM dispositivos_lora WHERE id_cliente = $id_cliente");
-$estadisticas['total_lora'] = $res->fetch_assoc()['total'] ?? 0;
-
-// Dispositivos ESP32
-$res = $conn->query("SELECT COUNT(*) AS total FROM dispositivos_esp32 WHERE id_cliente = $id_cliente");
-$estadisticas['total_esp32'] = $res->fetch_assoc()['total'] ?? 0;
-
-// Eventos de movimiento hoy
-$res = $conn->query("SELECT COUNT(*) AS total FROM sensor_movimiento WHERE DATE(fecha) = CURDATE()");
-$estadisticas['eventos_hoy'] = $res->fetch_assoc()['total'] ?? 0;
-
-// Promedio temperatura y humedad
-$res = $conn->query("
-  SELECT AVG(temperatura) AS temp, AVG(humedad) AS hum 
-  FROM registros 
-  WHERE DATE(fecha) = CURDATE() AND id_sensor IN (
-    SELECT id_sensor FROM sensores 
-    WHERE tipo_sensor = 'DHT11'
-  )
-");
-$row = $res->fetch_assoc();
-$estadisticas['temp_promedio'] = round($row['temp'], 1) ?? 0;
-$estadisticas['hum_promedio'] = round($row['hum'], 1) ?? 0;
-
-// Consulta últimos registros DHT11 para el usuario
-$datos_grafica = [];
-
-$sql_graf = "
-    SELECT r.fecha, r.temperatura, r.humedad 
-    FROM registros r 
-    INNER JOIN sensores s ON r.id_sensor = s.id_sensor 
-    INNER JOIN dispositivos_lora d ON s.id_dispositivo = d.id_lora 
-    WHERE s.tipo_sensor = 'DHT11' AND d.id_cliente = $id_cliente 
-    ORDER BY r.fecha DESC 
-    LIMIT 12
+// Obtener sensores ESP32
+$sqlESP = "
+    SELECT s.*, 
+           d.nombre_dispositivo AS micro_nombre,
+           d.ubicacion AS ubicacion_dispositivo,
+           'ESP32' AS tipo_microcontrolador,
+           (SELECT temperatura FROM registros r WHERE r.id_sensor = s.id_sensor ORDER BY r.fecha DESC LIMIT 1) AS ultima_temp,
+           (SELECT humedad FROM registros r WHERE r.id_sensor = s.id_sensor ORDER BY r.fecha DESC LIMIT 1) AS ultima_hum,
+           (SELECT COUNT(*) FROM sensor_movimiento m WHERE m.id_sensor = s.id_sensor AND DATE(m.fecha) = CURDATE()) AS eventos_hoy
+    FROM sensores s
+    INNER JOIN dispositivos_esp32 d ON s.id_dispositivo = d.id_esp32
+    WHERE d.id_cliente = ?
 ";
 
-$result = $conn->query($sql_graf);
-if ($result && $result->num_rows > 0) {
+$sensores = [];
+
+// Ejecutar ambas consultas
+foreach ([$sqlLoRa, $sqlESP] as $query) {
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $id_cliente);
+    $stmt->execute();
+    $result = $stmt->get_result();
     while ($row = $result->fetch_assoc()) {
-        $datos_grafica[] = [
-            'fecha' => date('H:i', strtotime($row['fecha'])),
-            'temp' => floatval($row['temperatura']),
-            'hum' => floatval($row['humedad'])
-        ];
+        $sensores[] = $row;
     }
-    // Invertir para mostrar cronológicamente
-    $datos_grafica = array_reverse($datos_grafica);
+    $stmt->close();
 }
+
 
 ?>
 

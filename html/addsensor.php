@@ -34,9 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         do {
             $codigo = strval(rand(10000000, 99999999));
             if ($_POST['microcontrolador'] === 'LoRa') {
-                $res = $conn->query("SELECT 1 FROM Dispositivos_LoRa WHERE codigo_lora='$codigo'");
+                $res = $conn->query("SELECT 1 FROM dispositivos_LoRa WHERE codigo_lora='$codigo'");
             } else {
-                $res = $conn->query("SELECT 1 FROM Dispositivos_ESP32 WHERE codigo_esp32='$codigo'");
+                $res = $conn->query("SELECT 1 FROM dispositivos_ESP32 WHERE codigo_esp32='$codigo'");
             }
         } while ($res->num_rows > 0);
 

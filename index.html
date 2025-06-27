@@ -1,439 +1,338 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
-    <meta charset="utf-8">
-    <title>SafeGarden - Pagina</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="Free HTML Templates" name="keywords">
-    <meta content="Free HTML Templates" name="description">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeGarden - Innovador</title>
+  <link rel="icon" href="img/favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Urbanist', sans-serif;
+      background: radial-gradient(circle at 10% 20%, #e9fcec, #d2f0e0 60%, #b8e4cf);
+      overflow-x: hidden;
+    }
 
-    <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon">
+    .navbar {
+      background-color: #fff;
+      border-bottom: 2px solid #28a74533;
+    }
 
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"> 
+    .navbar-brand span {
+      color: #28a745;
+    }
 
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      padding: 5rem 1rem;
+      background: linear-gradient(to right, #eafff1, #c1eed8);
+      border-bottom-left-radius: 3rem;
+      border-bottom-right-radius: 3rem;
+    }
 
-    <!-- Libraries Stylesheet -->
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+    .hero-text {
+      max-width: 550px;
+    }
 
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href="style.css" rel="stylesheet">
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #14532d;
+    }
 
+    .hero p {
+      font-size: 1.25rem;
+      color: #333;
+    }
 
+    .carousel {
+      max-width: 600px;
+      width: 100%;
+      border-radius: 2rem;
+      overflow: hidden;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
 
-    
+    .carousel-inner img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+
+    .carousel-item {
+      transition: transform 1.2s ease-in-out;
+      text-align: center;
+    }
+
+    .section {
+      padding: 4rem 1rem;
+    }
+
+    .section h2 {
+      font-weight: 700;
+      color: #14532d;
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      color: #28a745;
+      margin-bottom: 1rem;
+    }
+
+    .feature-box {
+      background: #ffffffcc;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s;
+    }
+
+    .feature-box:hover {
+      transform: translateY(-5px);
+    }
+
+    footer {
+      background: #383938;
+      color: #d1fae5;
+      padding: 3rem 1rem;
+    }
+
+    footer a {
+      color: #a7f3d0;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: white;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animated {
+      animation: fadeInUp 1s ease forwards;
+      opacity: 0;
+    }
+
+    .delay-1 {
+      animation-delay: 0.2s;
+    }
+
+    .delay-2 {
+      animation-delay: 0.4s;
+    }
+
+    .delay-3 {
+      animation-delay: 0.6s;
+    }
+
+    .bg-accent {
+      background: linear-gradient(135deg, #b2f5ea 0%, #c6f6d5 100%);
+      border-radius: 2rem;
+      padding: 3rem 2rem;
+    }
+
+    .cta-section {
+      background: #14532d;
+      color: white;
+      text-align: center;
+      padding: 5rem 2rem;
+      border-radius: 2rem;
+      margin-top: 3rem;
+    }
+
+    .cta-section h2 {
+      font-size: 2.5rem;
+    }
+
+    .cta-section .btn {
+      font-size: 1.2rem;
+      padding: 0.75rem 2rem;
+    }
+  </style>
 </head>
-
- <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-  />
-
+<!--comentario2-->>
 <body>
-    <!-- Navbar Start -->
-    <div class="container-fluid position-relative nav-bar p-0">
-        <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
-            <nav class="navbar navbar-expand-lg bg-light navbar-light shadow-lg py-3 py-lg-0 pl-3 pl-lg-5">
-                <a href="inicio.html" class="navbar-brand">
-                    <h1 class="m-0 text-primary"><span class="text-dark">Safe</span>Garden</h1>
-                </a>
-                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
-                    <div class="navbar-nav ml-auto py-0">
-                        <a href="index.html" class="nav-item nav-link active">Inicio</a>
-                        <a href="recursos.html" class="nav-item nav-link">Recursos</a>
-                        <a href="service.html" class="nav-item nav-link">Servicios</a>
-                        <a href="sobre.html" class="nav-item nav-link">Sobre Nosotros</a>
-                        <a href="html/login.php"  class="nav-item nav-link"><i class="fa-solid fa-user-circle fa-lg"></i></a>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </div>
-    <!-- Navbar End -->
-
-    <!-- Carousel Start -->
-    <div class="container-fluid p-0">
-        <div id="header-carousel" class="carousel slide" data-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img class="w-100" src="https://guiaverde.com/files/noticia/huertourbano_09092022130521.jpg" alt="Image">
-                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                        <div class="p-3" style="max-width: 900px;">
-                            <h4 class="text-white text-uppercase mb-md-3">Protección Integral</h4>
-            <h1 class="display-4 text-white mb-md-4">Mantén tu huerto seguro</h1>
-            <a href="recursos.html" class="btn btn-primary py-md-3 px-md-5 mt-2">Ver Servicios</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img class="w-100" src="https://imagenes.elpais.com/resizer/v2/BL5MFK6ABJL6FOJTRLZJNJBFQY.jpg?auth=f073738a401e5bef64059a7eaa19d361b1aa6b9323f33ea3a6a3c2d6a77b599c&width=414" alt="Image">
-                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                        <div class="p-3" style="max-width: 900px;">
-                            <h4 class="text-white text-uppercase mb-md-3">Monitoreo 24/7</h4>
-            <h1 class="display-4 text-white mb-md-4">Control ambiental en tiempo real</h1>
-            <a href="servicios.html" class="btn btn-primary py-md-3 px-md-5 mt-2">Ver Recursos</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
-                <div class="btn btn-dark" style="width: 45px; height: 45px;">
-                    <span class="carousel-control-prev-icon mb-n2"></span>
-                </div>
-            </a>
-            <a class="carousel-control-next" href="#header-carousel" data-slide="next">
-                <div class="btn btn-dark" style="width: 45px; height: 45px;">
-                    <span class="carousel-control-next-icon mb-n2"></span>
-                </div>
-            </a>
-        </div>
-    </div>
-    <!-- Carousel End -->
-
- <!-- About Start -->
-<div class="container-fluid py-5">
-  <div class="container pt-5">
-    <div class="row">
-      <!-- Imagen principal -->
-      <div class="col-lg-6" style="min-height: 500px;">
-        <div class="position-relative h-100">
-          <img
-            class="position-absolute w-100 h-100"
-            src="img/porta.jpg"
-            alt="Huerto protegido por SafeGarden"
-            style="object-fit: cover;"
-          >
-        </div>
-      </div>
-
-      <!-- Texto Sobre Nosotros -->
-      <div class="col-lg-6 pt-5 pb-lg-5">
-        <div class="about-text bg-white p-4 p-lg-5 my-lg-5">
-          <!-- Sección -->
-          <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">
-            Sobre Nosotros
-          </h6>
-          <!-- Título -->
-          <h1 class="mb-3">
-            Protegemos tu huerto con tecnología inteligente
-          </h1>
-          <!-- Párrafo descriptivo -->
-          <p>
-            En <strong>SafeGarden</strong> unimos pasión por la horticultura y soluciones IoT 
-            para cuidar tu cultivo día y noche. Nuestra plataforma te permite:
-          </p>
-          <!-- Lista de lo que mostramos/ofrecemos -->
-          <ul class="list-unstyled mb-4">
-            <li>
-              <i class="fa fa-check text-success mr-2"></i>
-              Monitoreo en tiempo real de humedad y temperatura
-            </li>
-            <li>
-              <i class="fa fa-check text-success mr-2"></i>
-              Alertas frente a plagas, heladas y sequías
-            </li>
-            <li>
-              <i class="fa fa-check text-success mr-2"></i>
-              Guías prácticas y recursos descargables
-            </li>
-            <li>
-              <i class="fa fa-check text-success mr-2"></i>
-              Asesoría personalizada y soporte 24/7
-            </li>
-          </ul>
-          <!-- Galería pequeña -->
-          <div class="row mb-4">
-            <div class="col-6">
-              <img class="img-fluid rounded" src="https://www.esfacilserverde.com/portal25/images/icagenda/thumbs/themes/ic_large_w900h600q100_huerto-electronico.jpg" alt="Sensor de humedad">
-            </div>
-            <div class="col-6">
-              <img class="img-fluid rounded" src="https://www.iberdrola.com/documents/20125/39916/Huertos_746x419_Huerto.jpg/37eeb4fa-af04-1711-b3d7-9e749f5a1e84?t=1626678081336" alt="Dashboard de monitoreo">
-            </div>
-          </div>
-          <!-- Botón de acción -->
-          <a href="contact.html" class="btn btn-primary py-md-3 px-md-5 mt-2">
-            Contáctanos
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- About End -->
-
-<!-- Feature Start -->
-<div class="container-fluid pb-5">
-  <div class="container pb-5">
-    <div class="row">
-      <!-- Ciberseguridad -->
-      <div class="col-md-4">
-        <div class="d-flex mb-4 mb-lg-0">
-          <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-primary mr-3"
-               style="height: 100px; width: 100px;">
-            <i class="fa fa-2x fa-shield-alt text-white"></i>
-          </div>
-          <div class="d-flex flex-column">
-            <h5>Ciberseguridad</h5>
-            <p class="m-0">
-              Protección de sistemas y redes ante ciberamenazas, garantizando la integridad y confidencialidad de tus datos.
-            </p>
-          </div>
-        </div>
-      </div>
-      <!-- ITIL -->
-      <div class="col-md-4">
-        <div class="d-flex mb-4 mb-lg-0">
-          <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-primary mr-3"
-               style="height: 100px; width: 100px;">
-            <i class="fa fa-2x fa-tasks text-white"></i>
-          </div>
-          <div class="d-flex flex-column">
-            <h5>ITIL</h5>
-            <p class="m-0">
-              Buenas prácticas en gestión de servicios de TI para optimizar procesos y mejorar la calidad del servicio.
-            </p>
-          </div>
-        </div>
-      </div>
-      <!-- IoT -->
-      <div class="col-md-4">
-                    <div class="d-flex mb-4 mb-lg-0">
-                        <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-primary mr-3" style="height: 100px; width: 100px;">
-                            <i class="fa fa-2x fa-globe text-white"></i>
-                        </div>
-          <div class="d-flex flex-column">
-            <h5>IoT</h5>
-            <p class="m-0">
-              Integración de dispositivos conectados para el monitoreo y control inteligente de tu huerto.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Feature End -->
-
-<!-- Service Start -->
-<div class="container-fluid py-3">
-  <div class="container pt-3 pb-2">
-    <div class="text-center mb-3 pb-2">
-      <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Servicios</h6>
-      <h1>Lo que Ofrecemos</h1>
-    </div>
-    <div class="row no-gutters">
-      <!-- Ciberseguridad -->
-      <div class="col-lg-3 col-md-6 mb-3">
-        <div class="service-item bg-white text-center py-4 px-3">
-          <i class="fa fa-2x fa-shield-alt mx-auto mb-3"></i>
-          <h5 class="mb-2">Ciberseguridad</h5>
-          <p class="m-0">Protección de tu huerto y red contra amenazas informáticas.</p>
-        </div>
-      </div>
-      <!-- Desarrollo de Software -->
-      <div class="col-lg-3 col-md-6 mb-3">
-        <div class="service-item bg-white text-center py-4 px-3">
-          <i class="fa fa-2x fa-code mx-auto mb-3"></i>
-          <h5 class="mb-2">Desarrollo de Software</h5>
-          <p class="m-0">Soluciones a medida para la gestión y monitoreo de cultivos.</p>
-        </div>
-      </div>
-      <!-- Internet de las Cosas -->
-      <div class="col-lg-3 col-md-6 mb-3">
-        <div class="service-item bg-white text-center py-4 px-3">
-          <i class="fa fa-2x fa-cogs mx-auto mb-3"></i>
-          <h5 class="mb-2">Internet de las Cosas</h5>
-          <p class="m-0">Sensores y actuadores conectados para control inteligente 24/7.</p>
-        </div>
-      </div>
-      <!-- Soporte Técnico Empresarial -->
-      <div class="col-lg-3 col-md-6 mb-3">
-        <div class="service-item bg-white text-center py-4 px-3">
-          <i class="fa fa-2x fa-headset mx-auto mb-3"></i>
-          <h5 class="mb-2">Soporte Técnico</h5>
-          <p class="m-0">Asistencia y mantenimiento continuo para tu infraestructura TI.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Service End -->
-
-<!-- Team Start -->
-<div class="container-fluid py-1">
-  <div class="container pt-5 pb-3">
-    <div class="text-center mb-3 pb-3">
-      <h6 class="text-primary text-uppercase" style="letter-spacing: 5px;">Nuestro Equipo</h6>
-      <h1>Conoce al Equipo Scrum</h1>
-    </div>
-    <div class="row">
-      <!-- Patrick Zaid Castro Gatica – Product Owner -->
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-2">
-        <div class="team-item bg-white mb-4">
-          <div class="team-img position-relative overflow-hidden">
-            <img class="img-fluid w-100" src="img/testimonial-3.jpg" alt="Patrick Zaid Castro Gatica">
-            <div class="team-social">
-              <a class="btn btn-outline-primary btn-square" href="#"><i class="fab fa-facebook-f"></i></a>
-              <a class="btn btn-outline-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-          <div class="text-center py-4">
-            <h5 class="text-truncate">Patrick Zaid Castro</h5>
-            <p class="m-0">Product Owner</p>
-          </div>
-        </div>
-      </div>
-      <!-- Paulina Elizabeth Silva Hernández – Scrum Master -->
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-2">
-        <div class="team-item bg-white mb-4">
-          <div class="team-img position-relative overflow-hidden">
-            <img class="img-fluid w-100" src="img/team-3.jpg" alt="Paulina Elizabeth Silva Hernández">
-            <div class="team-social">
-              <a class="btn btn-outline-primary btn-square" href="#"><i class="fab fa-facebook-f"></i></a>
-              <a class="btn btn-outline-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-          <div class="text-center py-4">
-            <h5 class="text-truncate">Paulina E. Silva</h5>
-            <p class="m-0">Scrum Master</p>
-          </div>
-        </div>
-      </div>
-      <!-- Alejandro Suarez Casimiro – Scrum Team Member -->
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-2">
-        <div class="team-item bg-white mb-4">
-          <div class="team-img position-relative overflow-hidden">
-            <img class="img-fluid w-100" src="img/team-2.jpg" alt="Alejandro Suarez Casimiro">
-            <div class="team-social">
-              <a class="btn btn-outline-primary btn-square" href="#"><i class="fab fa-facebook-f"></i></a>
-              <a class="btn btn-outline-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-          <div class="text-center py-4">
-            <h5 class="text-truncate">Alejandro Suarez</h5>
-            <p class="m-0">Scrum Team Member</p>
-          </div>
-        </div>
-      </div>
-      <!-- David Gomez Medina – Scrum Team Member -->
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-2">
-        <div class="team-item bg-white mb-4">
-          <div class="team-img position-relative overflow-hidden">
-            <img class="img-fluid w-100" src="img/team-4.jpg" alt="David Gomez Medina">
-            <div class="team-social">
-              <a class="btn btn-outline-primary btn-square" href="#"><i class="fab fa-facebook-f"></i></a>
-              <a class="btn btn-outline-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-          <div class="text-center py-4">
-            <h5 class="text-truncate">David Gomez Medina</h5>
-            <p class="m-0">Scrum Team Member</p>
-          </div>
-        </div>
-      </div>
-      <!-- Carlos Raul Lopez Arellano – Scrum Team Member -->
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-2">
-        <div class="team-item bg-white mb-4">
-          <div class="team-img position-relative overflow-hidden">
-            <img class="img-fluid w-100" src="img/user.jpg" alt="Carlos Raul Lopez Arellano">
-            <div class="team-social">
-              <a class="btn btn-outline-primary btn-square" href="https://www.facebook.com/santos.ruly.2025"><i class="fab fa-facebook-f"></i></a>
-              <a class="btn btn-outline-primary btn-square" href="https://www.instagram.com/rulysantos890"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-          <div class="text-center py-4">
-            <h5 class="text-truncate">Carlos R. Lopez</h5>
-            <p class="m-0">Scrum Team Member</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Team End -->
-
-<!-- Footer Start -->
-<div class="container-fluid bg-dark text-white-50 py-5 px-sm-3 px-lg-5" style="margin-top: 90px;">
-  <div class="row pt-5">
-    <!-- Marca y descripción -->
-    <div class="col-lg-3 col-md-6 mb-5">
-      <a href="" class="navbar-brand">
-        <h1 class="text-primary"><span class="text-white">Safe</span>Garden</h1>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="inicio.html">
+        <h2><span>Safe</span>Garden</h2>
       </a>
-      <p>Soluciones integrales para proteger y monitorear tu huerto con tecnología IoT y ciberseguridad.</p>
-      <h6 class="text-white text-uppercase mt-4 mb-3" style="letter-spacing: 5px;">Síguenos</h6>
-      <div class="d-flex justify-content-start">
-        <a class="btn btn-outline-primary btn-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
-        <a class="btn btn-outline-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navmenu">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a href="index.html" class="nav-link active">Inicio</a></li>
+          <li class="nav-item"><a href="recursos.html" class="nav-link">Recursos</a></li>
+          <li class="nav-item"><a href="service.html" class="nav-link">Servicios</a></li>
+          <li class="nav-item"><a href="sobre.html" class="nav-link">Sobre Nosotros</a></li>
+          <li class="nav-item"><a href="login.php" class="nav-link"><i class="fa-solid fa-user-circle"></i></a></li>
+        </ul>
       </div>
     </div>
-    <!-- Servicios -->
-    <div class="col-lg-3 col-md-6 mb-5">
-      <h5 class="text-white text-uppercase mb-4" style="letter-spacing: 5px;">Servicios</h5>
-      <div class="d-flex flex-column justify-content-start">
-        <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Ciberseguridad</a>
-        <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Desarrollo de Software</a>
-        <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Internet de las Cosas</a>
-        <a class="text-white-50" href="#"><i class="fa fa-angle-right mr-2"></i>Soporte Técnico</a>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero container">
+    <div class="hero-text">
+      <h1>Bienvenido a SafeGarden</h1>
+      <p>Tu plataforma confiable para monitorear, cuidar y proteger tu huerto con tecnología IoT y soluciones inteligentes.</p>
+      <a href="service.html" class="btn btn-success mt-3">Explora nuestros servicios</a>
+    </div>
+    <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="imge/fondo.png" class="d-block w-100" alt="Huerto 1">
+        </div>
+        <div class="carousel-item">
+          <img src="imge/fondo2.jpg" class="d-block w-100" alt="Huerto 2">
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Siguiente</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ¿Qué es SafeGarden? -->
+  <section class="section container">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <div id="safegardenCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+          <div class="carousel-inner rounded shadow">
+            <div class="carousel-item active">
+              <img src="imge/fondo3.jpeg" class="d-block w-100" alt="Huerto 1">
+            </div>
+            <div class="carousel-item">
+              <img src="imge/fondo5.jpg" class="d-block w-100" alt="Huerto 2">
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#safegardenCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#safegardenCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+          </button>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h2>¿Qué es SafeGarden?</h2>
+        <p>SafeGarden es una plataforma tecnológica especializada en proteger y optimizar el cuidado de huertos, integrando sensores, monitoreo y control remoto para que tus cultivos estén siempre en las mejores condiciones.</p>
+        <ul>
+          <li>🌱 Monitoreo ambiental en tiempo real</li>
+          <li>🔒 Seguridad digital avanzada</li>
+          <li>📊 Análisis y reportes inteligentes</li>
+          <li>📱 Control desde dispositivos móviles</li>
+          <li>🤝 Comunidad y asesoría continua</li>
+        </ul>
       </div>
     </div>
-    <!-- Enlaces útiles -->
-    <div class="col-lg-3 col-md-6 mb-5">
-      <h5 class="text-white text-uppercase mb-4" style="letter-spacing: 5px;">Enlaces</h5>
-      <div class="d-flex flex-column justify-content-start">
-        <a class="text-white-50 mb-2" href="inicio.html"><i class="fa fa-angle-right mr-2"></i>Inicio</a>
-        <a class="text-white-50 mb-2" href="recursos.html"><i class="fa fa-angle-right mr-2"></i>Recursos</a>
-        <a class="text-white-50 mb-2" href="service.html"><i class="fa fa-angle-right mr-2"></i>Servicios</a>
-        <a class="text-white-50" href="sobre.html"><i class="fa fa-angle-right mr-2"></i>Sobre Nosotros</a>
+  </section>
+
+  <!-- ¿Qué te ofrecemos? -->
+  <section class="section container bg-accent">
+    <div class="text-center mb-5">
+      <h2>¿Qué te ofrecemos?</h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="feature-box text-center">
+          <div class="feature-icon"><i class="fas fa-wifi"></i></div>
+          <h5>Monitoreo IoT</h5>
+          <p>Supervisión en tiempo real de tus cultivos desde cualquier lugar.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box text-center">
+          <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+          <h5>Ciberseguridad</h5>
+          <p>Protección de datos y accesos con estándares de seguridad modernos.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box text-center">
+          <div class="feature-icon"><i class="fas fa-seedling"></i></div>
+          <h5>Sostenibilidad</h5>
+          <p>Fomentamos prácticas agrícolas sostenibles y tecnológicas.</p>
+        </div>
       </div>
     </div>
-    <!-- Contacto y newsletter -->
-    <div class="col-lg-3 col-md-6 mb-5">
-      <h5 class="text-white text-uppercase mb-4" style="letter-spacing: 5px;">Contacto</h5>
-      <p><i class="fa fa-envelope mr-2"></i>safegarden@gmail.com</p>
-      <p><i class="fa fa-phone-alt mr-2"></i>+52 624 156 6830</p>
-      
+  </section>
+
+  <!-- Por qué elegirnos -->
+<section class="section container bg-accent mt-5">
+  <div class="text-center mb-5">
+    <h2>¿Por qué elegir SafeGarden?</h2>
+  </div>
+  <div class="row g-4">
+    <div class="col-md-4 animated delay-1">
+      <div class="feature-box text-center">
+        <i class="fas fa-satellite-dish fa-3x text-success mb-3"></i>
+        <h5>Automatización Inteligente</h5>
+        <p>Control total de riego, clima y nutrientes con inteligencia artificial.</p>
+      </div>
+    </div>
+    <div class="col-md-4 animated delay-2">
+      <div class="feature-box text-center">
+        <i class="fas fa-mobile-alt fa-3x text-success mb-3"></i>
+        <h5>Acceso desde tu móvil</h5>
+        <p>Administra tu huerto desde donde estés con nuestra app conectada.</p>
+      </div>
+    </div>
+    <div class="col-md-4 animated delay-3">
+      <div class="feature-box text-center">
+        <i class="fas fa-chart-line fa-3x text-success mb-3"></i>
+        <h5>Datos para decisiones reales</h5>
+        <p>Informes, gráficas y alertas para tomar decisiones precisas al instante.</p>
+      </div>
     </div>
   </div>
-</div>
-<div class="container-fluid bg-dark text-white border-top py-4 px-sm-3 px-md-5" style="border-color: rgba(256,256,256,.1) !important;">
-  <div class="row">
-    <div class="col-lg-6 text-center text-md-left mb-3 mb-md-0">
-      <p class="m-0 text-white-50">© 2025 SafeGarden. Todos los derechos reservados.</p>
+</section>
+
+
+  
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h4>SafeGarden</h4>
+          <p>Innovando en el cuidado de huertos con soluciones tecnológicas.</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <p>&copy; 2025 SafeGarden. Todos los derechos reservados.</p>
+          <p><i class="fa fa-envelope"></i> safegarden@gmail.com | <i class="fa fa-phone"></i> +52 624 156 6830</p>
+        </div>
+      </div>
     </div>
-    <div class="col-lg-6 text-center text-md-right">
-      <p class="m-0 text-white-50">Diseñado con ❤ por el equipo SafeGarden</p>
-    </div>
-  </div>
-</div>
-<!-- Footer End -->
+  </footer>
 
-
-
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="lib/tempusdominus/js/moment.min.js"></script>
-    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-
-    <!-- Contact Javascript File -->
-    <script src="mail/jqBootstrapValidation.min.js"></script>
-    <script src="mail/contact.js"></script>
-
-    <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

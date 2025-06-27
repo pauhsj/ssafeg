@@ -8,7 +8,6 @@ $servername = "localhost";
 $username = "u557447082_9x8vh";
 $password ='$afegarden_bm9F8>y';
 $dbname = "u557447082_safegardendb";
-$conexion = new mysqli($servername, $username, $password, $dbname);
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
@@ -186,7 +185,7 @@ $conn->close();
         <button type="submit">Registrarme</button>
 
         <div class="login-link">
-          <p>¿Ya tienes una cuenta? <a href="login.php">Iniciar sesión</a></p>
+          <p>¿Ya tienes una cuenta? <a href="html/login.php">Iniciar sesión</a></p>
         </div>
       </form>
     </div>

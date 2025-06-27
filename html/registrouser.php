@@ -15,7 +15,7 @@ if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
 
-// Limpiar y validar entradas
+// Función para limpiar entradas
 function limpiar($dato) {
     return htmlspecialchars(trim($dato), ENT_QUOTES, 'UTF-8');
 }
@@ -23,7 +23,7 @@ function limpiar($dato) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre     = limpiar($_POST['nombre'] ?? '');
     $email      = limpiar($_POST['email'] ?? '');
-    $contraseña = $_POST['contraseña'] ?? ''; // sin limpiar aún para permitir símbolos
+    $contraseña = $_POST['contraseña'] ?? ''; // no limpiamos para preservar caracteres especiales
     $telefono   = limpiar($_POST['telefono'] ?? '');
     $ciudad     = limpiar($_POST['ciudad'] ?? '');
 
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/", $contraseña)) {
         $error = "La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y símbolos.";
     } else {
-        // Verificar si el correo ya está registrado
+        // Validar si ya existe el email
         $checkSql = "SELECT id_cliente FROM usuario WHERE email = ?";
         $checkStmt = $conn->prepare($checkSql);
         $checkStmt->bind_param("s", $email);
@@ -51,15 +51,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($checkResult->num_rows > 0) {
             $error = "Este correo ya está registrado.";
         } else {
-            // Hashear la contraseña
+            // Hash de la contraseña
             $passHasheada = password_hash($contraseña, PASSWORD_DEFAULT);
 
-            // Insertar nuevo usuario
-            $insertSql = "INSERT INTO usuario (nombre, email, contraseña, telefono, ciudad, creado_en) 
-                          VALUES (?, ?, ?, ?, ?, NOW())";
+            $insertSql = "INSERT INTO usuario (nombre, email, contraseña, telefono, ciudad, creado_en) VALUES (?, ?, ?, ?, ?, NOW())";
             $stmt = $conn->prepare($insertSql);
             if (!$stmt) {
-                $error = "Error en la preparación de la consulta: " . $conn->error;
+                $error = "Error en la preparación de consulta: " . $conn->error;
             } else {
                 $stmt->bind_param("sssss", $nombre, $email, $passHasheada, $telefono, $ciudad);
                 if ($stmt->execute()) {
@@ -237,7 +235,12 @@ $conn->close();
 
     if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(contraseña)) {
       e.preventDefault();
-      Swal.fire({ icon: 'error', title: 'Contraseña débil', html: 'La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, números y símbolos.', confirmButtonColor: '#388e3c' });
+      Swal.fire({
+        icon: 'error',
+        title: 'Contraseña débil',
+        html: 'Debe contener al menos 8 caracteres, incluyendo <b>mayúsculas</b>, <b>minúsculas</b>, <b>números</b> y <b>símbolos</b>.',
+        confirmButtonColor: '#388e3c'
+      });
       return;
     }
 

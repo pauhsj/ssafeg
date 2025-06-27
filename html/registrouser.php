@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $stmt->bind_param("sssss", $nombre, $email, $passHasheada, $telefono, $ciudad);
                 if ($stmt->execute()) {
-                    $success = "Registro exitoso, redirigiendo a inicio de sesión...";
+                    $success = "Registro exitoso, redirigiendo...";
                     // Puedes poner header() aquí pero usaré JS para mostrar mensaje bonito antes
                 } else {
                     $error = "Error al registrar: " . $stmt->error;
@@ -237,7 +237,7 @@ $conn->close();
       timer: 3000,
       timerProgressBar: true,
       showConfirmButton: false,
-      didClose: () => { window.location.href = 'login.php'; }
+      didClose: () => { window.location.href = 'dashboard.php'; }
     });
   <?php endif; ?>
 </script>

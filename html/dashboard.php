@@ -486,12 +486,7 @@ if ($result && $result->num_rows > 0) {
     </div>
   <?php endforeach; ?>
 </div>
-<div class="card mt-4">
-  <div class="card-body">
-    <h5 class="card-title">Temperatura y Humedad - Últimas Lecturas</h5>
-    <canvas id="graficaTH" height="100"></canvas>
-  </div>
-</div>
+
 
 
     

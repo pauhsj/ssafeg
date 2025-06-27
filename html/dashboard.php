@@ -24,7 +24,7 @@ if (!isset($_SESSION['id_cliente'])) {
 $id_cliente = $_SESSION['id_cliente'];
 
 // Obtener sensores junto con dispositivo y últimos datos asociados
-$sqlSensores = "
+$sqlsensores = "
     SELECT s.*, 
            d.nombre_dispositivo AS micro_nombre,
            d.ubicacion AS ubicacion_dispositivo,

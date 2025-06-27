@@ -260,7 +260,7 @@ $conn->close();
       timer: 3000,
       timerProgressBar: true,
       showConfirmButton: false,
-      didClose: () => { window.location.href = 'dashboard.php'; }
+      didClose: () => { window.location.href = 'login.php'; }
     });
   <?php endif; ?>
 </script>

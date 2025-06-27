@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if (password_verify($contrasena, $hash)) {
                 $_SESSION["id_cliente"] = $usuario["id_cliente"];
                 // Redirige directamente al dashboard (sin depender de JS)
-                header("Location: ");
+                header("Location: dashboard.php");
                 exit;
             } else {
                 $error = "Contraseña incorrecta.";

@@ -47,6 +47,75 @@ if ($resultSensores && $resultSensores->num_rows > 0) {
         $sensores[] = $row;
     }
 }
+
+// Consulta rápida de estadísticas generales
+$estadisticas = [
+  'total_sensores' => 0,
+  'total_lora' => 0,
+  'total_esp32' => 0,
+  'eventos_hoy' => 0,
+  'temp_promedio' => 0,
+  'hum_promedio' => 0
+];
+
+// Total sensores
+$res = $conn->query("SELECT COUNT(*) AS total FROM sensores WHERE id_dispositivo IN 
+  (SELECT id_lora FROM dispositivos_LoRa WHERE id_cliente = $id_cliente) 
+  OR id_dispositivo IN 
+  (SELECT id_esp32 FROM dispositivos_ESP32 WHERE id_cliente = $id_cliente)");
+$estadisticas['total_sensores'] = $res->fetch_assoc()['total'] ?? 0;
+
+// Dispositivos LoRa
+$res = $conn->query("SELECT COUNT(*) AS total FROM dispositivos_LoRa WHERE id_cliente = $id_cliente");
+$estadisticas['total_lora'] = $res->fetch_assoc()['total'] ?? 0;
+
+// Dispositivos ESP32
+$res = $conn->query("SELECT COUNT(*) AS total FROM dispositivos_ESP32 WHERE id_cliente = $id_cliente");
+$estadisticas['total_esp32'] = $res->fetch_assoc()['total'] ?? 0;
+
+// Eventos de movimiento hoy
+$res = $conn->query("SELECT COUNT(*) AS total FROM sensor_movimiento WHERE DATE(fecha) = CURDATE()");
+$estadisticas['eventos_hoy'] = $res->fetch_assoc()['total'] ?? 0;
+
+// Promedio temperatura y humedad
+$res = $conn->query("
+  SELECT AVG(temperatura) AS temp, AVG(humedad) AS hum 
+  FROM registros 
+  WHERE DATE(fecha) = CURDATE() AND id_sensor IN (
+    SELECT id_sensor FROM sensores 
+    WHERE tipo_sensor = 'DHT11'
+  )
+");
+$row = $res->fetch_assoc();
+$estadisticas['temp_promedio'] = round($row['temp'], 1) ?? 0;
+$estadisticas['hum_promedio'] = round($row['hum'], 1) ?? 0;
+
+// Consulta últimos registros DHT11 para el usuario
+$datos_grafica = [];
+
+$sql_graf = "
+    SELECT r.fecha, r.temperatura, r.humedad 
+    FROM registros r 
+    INNER JOIN sensores s ON r.id_sensor = s.id_sensor 
+    INNER JOIN dispositivos_LoRa d ON s.id_dispositivo = d.id_lora 
+    WHERE s.tipo_sensor = 'DHT11' AND d.id_cliente = $id_cliente 
+    ORDER BY r.fecha DESC 
+    LIMIT 12
+";
+
+$result = $conn->query($sql_graf);
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $datos_grafica[] = [
+            'fecha' => date('H:i', strtotime($row['fecha'])),
+            'temp' => floatval($row['temperatura']),
+            'hum' => floatval($row['humedad'])
+        ];
+    }
+    // Invertir para mostrar cronológicamente
+    $datos_grafica = array_reverse($datos_grafica);
+}
+
 ?>
 
 
@@ -327,6 +396,68 @@ if ($resultSensores && $resultSensores->num_rows > 0) {
                   </div>
                   <div class="container mt-4">
 
+                  <div class="row mt-4">
+  <!-- Total sensores -->
+  <div class="col-md-4">
+    <div class="card text-center card-custom">
+      <div class="card-body">
+        <h5 class="card-title">Sensores Registrados</h5>
+        <p class="display-6 text-primary"><?= $estadisticas['total_sensores'] ?></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dispositivos LoRa -->
+  <div class="col-md-4">
+    <div class="card text-center card-custom">
+      <div class="card-body">
+        <h5 class="card-title">Dispositivos LoRa</h5>
+        <p class="display-6 text-success"><?= $estadisticas['total_lora'] ?></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dispositivos ESP32 -->
+  <div class="col-md-4">
+    <div class="card text-center card-custom">
+      <div class="card-body">
+        <h5 class="card-title">Dispositivos ESP32</h5>
+        <p class="display-6 text-info"><?= $estadisticas['total_esp32'] ?></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Eventos movimiento hoy -->
+  <div class="col-md-4 mt-3">
+    <div class="card text-center card-custom">
+      <div class="card-body">
+        <h5 class="card-title">Eventos de Movimiento Hoy</h5>
+        <p class="display-6 text-danger"><?= $estadisticas['eventos_hoy'] ?></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Promedio Temperatura -->
+  <div class="col-md-4 mt-3">
+    <div class="card text-center card-custom">
+      <div class="card-body">
+        <h5 class="card-title">Temperatura Promedio</h5>
+        <p class="display-6 text-warning"><?= $estadisticas['temp_promedio'] ?> °C</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Promedio Humedad -->
+  <div class="col-md-4 mt-3">
+    <div class="card text-center card-custom">
+      <div class="card-body">
+        <h5 class="card-title">Humedad Promedio</h5>
+        <p class="display-6 text-primary"><?= $estadisticas['hum_promedio'] ?> %</p>
+      </div>
+    </div>
+  </div>
+</div>
+
                   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
   <?php foreach ($sensores as $row): ?>
     <div class="col">
@@ -355,6 +486,12 @@ if ($resultSensores && $resultSensores->num_rows > 0) {
     </div>
   <?php endforeach; ?>
 </div>
+<div class="card mt-4">
+  <div class="card-body">
+    <h5 class="card-title">Temperatura y Humedad - Últimas Lecturas</h5>
+    <canvas id="graficaTH" height="100"></canvas>
+  </div>
+</div>
 
 
     
@@ -367,8 +504,7 @@ if ($resultSensores && $resultSensores->num_rows > 0) {
                  
 </div>
 
-      
-  <script>
+    <script>
 function cargarDatosSensor() {
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'obtenerDatos.php', true);
@@ -451,9 +587,8 @@ cargarDatos();
 
 // Actualizar cada 10 segundos
 setInterval(cargarDatos, 10000);
+
 </script>
-
-
 
 
     <!-- Core JS -->

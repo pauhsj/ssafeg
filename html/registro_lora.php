@@ -5,6 +5,10 @@ $password = "safegarden_bm9F8>y";
 $dbname = "u557447082_safegardendb";
 
 
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Error de conexión: " . $conn->connect_error);
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre_dispositivo = $_POST['nombre'];
     $descripcion_dispositivo = $_POST['descripcion'];

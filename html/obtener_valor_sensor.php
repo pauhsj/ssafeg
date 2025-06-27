@@ -4,6 +4,11 @@ $username = "u557447082_9x8vh";
 $password = "safegarden_bm9F8>y";
 $dbname = "u557447082_safegardendb";
 
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Error de conexión: " . $conn->connect_error);
+}
 $id = intval($_GET['id_sensor'] ?? 0);
 $tipo = $_GET['tipo'] ?? '';
 

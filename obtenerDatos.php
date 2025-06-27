@@ -3,11 +3,16 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Configuración de conexión
 $servername = "localhost";
 $username = "u557447082_9x8vh";
 $password = "safegarden_bm9F8>y";
 $dbname = "u557447082_safegardendb";
+
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Error de conexión: " . $conn->connect_error);
+}
 
 // Obtener los parámetros del sensor
 $id_sensor = $_GET['id_sensor'] ?? null;

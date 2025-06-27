@@ -1,10 +1,14 @@
 <?php
 session_start();
+$servername = "localhost";
+$username = "u557447082_9x8vh";
+$password ="safegarden_bm9F8>y";
+$dbname = "u557447082_safegardendb";
+$conn = new mysqli($servername, $username, $password, $dbname);
+
 header('Content-Type: text/html; charset=utf-8');
 
 // Conexión DB
-include 'conexion.php';
-;
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) die("Conexión fallida: " . $conn->connect_error);

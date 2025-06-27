@@ -1,5 +1,9 @@
 <?php
-include 'conexion.php';
+$servername = "localhost";
+$username = "u557447082_9x8vh";
+$password ="safegarden_bm9F8>y";
+$dbname = "u557447082_safegardendb";
+$conn = new mysqli($servername, $username, $password, $dbname);
 
 
 $conn = new mysqli($servername, $username, $password, $dbname);

@@ -187,7 +187,7 @@ $conn->close();
         <button type="submit">Registrarme</button>
 
         <div class="login-link">
-          <p>¿Ya tienes una cuenta? <a href="html/login.php">Iniciar sesión</a></p>
+          <p>¿Ya tienes una cuenta? <a href="login.php">Iniciar sesión</a></p>
         </div>
       </form>
     </div>

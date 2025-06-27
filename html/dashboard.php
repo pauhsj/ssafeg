@@ -2,7 +2,7 @@
 session_start();
 $servername = "localhost";
 $username = "u557447082_9x8vh";
-$password ='120994knj';
+$password ="safegarden_bm9F8>y";
 $dbname = "u557447082_safegardendb";
 
 

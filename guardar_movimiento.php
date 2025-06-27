@@ -10,16 +10,16 @@ $evento = $_GET['evento'] ?? null;
 if ($id_sensor && $evento) {
     $stmt = $conn->prepare("INSERT INTO sensor_movimiento (id_sensor, evento) VALUES (?, ?)");
     $stmt->bind_param("ii", $id_sensor, $evento);
-    
+
     if ($stmt->execute()) {
-        echo "Evento registrado correctamente";
+        echo "Evento registrado correctamente.";
     } else {
-        echo "Error al guardar";
+        echo "Error al insertar.";
     }
 
     $stmt->close();
     $conn->close();
 } else {
-    echo "Faltan parámetros";
+    echo "Faltan parámetros.";
 }
 ?>

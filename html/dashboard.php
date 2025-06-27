@@ -60,17 +60,17 @@ $estadisticas = [
 
 // Total sensores
 $res = $conn->query("SELECT COUNT(*) AS total FROM sensores WHERE id_dispositivo IN 
-  (SELECT id_lora FROM dispositivos_LoRa WHERE id_cliente = $id_cliente) 
+  (SELECT id_lora FROM dispositivos_lora WHERE id_cliente = $id_cliente) 
   OR id_dispositivo IN 
-  (SELECT id_esp32 FROM dispositivos_ESP32 WHERE id_cliente = $id_cliente)");
+  (SELECT id_esp32 FROM dispositivos_esp32 WHERE id_cliente = $id_cliente)");
 $estadisticas['total_sensores'] = $res->fetch_assoc()['total'] ?? 0;
 
 // Dispositivos LoRa
-$res = $conn->query("SELECT COUNT(*) AS total FROM dispositivos_LoRa WHERE id_cliente = $id_cliente");
+$res = $conn->query("SELECT COUNT(*) AS total FROM dispositivos_lora WHERE id_cliente = $id_cliente");
 $estadisticas['total_lora'] = $res->fetch_assoc()['total'] ?? 0;
 
 // Dispositivos ESP32
-$res = $conn->query("SELECT COUNT(*) AS total FROM dispositivos_ESP32 WHERE id_cliente = $id_cliente");
+$res = $conn->query("SELECT COUNT(*) AS total FROM dispositivos_esp32 WHERE id_cliente = $id_cliente");
 $estadisticas['total_esp32'] = $res->fetch_assoc()['total'] ?? 0;
 
 // Eventos de movimiento hoy
@@ -97,7 +97,7 @@ $sql_graf = "
     SELECT r.fecha, r.temperatura, r.humedad 
     FROM registros r 
     INNER JOIN sensores s ON r.id_sensor = s.id_sensor 
-    INNER JOIN dispositivos_LoRa d ON s.id_dispositivo = d.id_lora 
+    INNER JOIN dispositivos_lora d ON s.id_dispositivo = d.id_lora 
     WHERE s.tipo_sensor = 'DHT11' AND d.id_cliente = $id_cliente 
     ORDER BY r.fecha DESC 
     LIMIT 12

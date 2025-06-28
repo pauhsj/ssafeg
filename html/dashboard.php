@@ -412,7 +412,7 @@ $estadisticas['eventos_hoy'] = $eventosHoy;
 
                   <div class="row mt-4">
 
-                  <h1>HOLA GENARO</h1>
+                 
   <!-- Total sensores -->
   <div class="col-md-4">
     <div class="card text-center card-custom">

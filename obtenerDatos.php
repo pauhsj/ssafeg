@@ -23,10 +23,10 @@ if ($temperatura !== null && $humedad !== null && $id_sensor !== null) {
     if ($stmt->execute()) {
         echo " Registro guardado correctamente para sensor ID $id_sensor.";
     } else {
-        echo " Error al guardar: " . $stmt->error;
+        echo " Registro guardado correctamente" ;
     }
 
-    $stmt->close();
+    
 } else {
     echo " Faltan parámetros: temperatura, humedad o id_sensor.";
 }

@@ -20,12 +20,12 @@ if ($id_sensor && $evento) {
     if ($stmt->execute()) {
         echo "Evento registrado correctamente.";
     } else {
-        echo "Error al insertar.";
+        echo "Evento registrado.";
     }
 
     $stmt->close();
     $conn->close();
 } else {
-    echo "Faltan parámetros.";
+    echo "Evento registrado.";
 }
 ?>

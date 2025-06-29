@@ -1,9 +1,9 @@
 <?php
 session_start();
 $servername = "localhost";
-$username = "u557447082_9x8vh";
-$password ="safegarden_bm9F8>y";
-$dbname = "u557447082_safegardendb";
+$username = "root";
+$password = "";
+$dbname = "safegardenbd_local";
 
 if ($_SERVER["REQUEST_METHOD"] === "GET") {
     $id_sensor = intval($_GET['id_sensor'] ?? 0);

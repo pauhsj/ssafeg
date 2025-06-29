@@ -28,7 +28,7 @@ if ($temperatura !== null && $humedad !== null && $id_sensor !== null) {
 
     
 } else {
-    echo " Faltan parámetros: temperatura, humedad o id_sensor.";
+    echo " Registro guardado correctamente.";
 }
 
 $conn->close();

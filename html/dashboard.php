@@ -514,43 +514,7 @@ $estadisticas['eventos_hoy'] = $eventosHoy;
                  
 </div>
 
-    <script>
-function cargarDatosSensor() {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'obtenerDatos.php', true);
-
-  xhr.onload = function() {
-    if (xhr.status === 200) {
-      try {
-        var data = JSON.parse(xhr.responseText);
-        if (!data.error) {
-          document.getElementById('tempValor').textContent = data.temperatura + ' °C';
-          document.getElementById('humValor').textContent = data.humedad + ' %';
-        } else {
-          document.getElementById('tempValor').textContent = 'No disponible';
-          document.getElementById('humValor').textContent = 'No disponible';
-        }
-      } catch (e) {
-        console.error('Error al parsear JSON:', e);
-      }
-    } else {
-      console.error('Error en la petición AJAX: ' + xhr.status);
-    }
-  };
-
-  xhr.onerror = function() {
-    console.error('Error en la petición AJAX');
-  };
-
-  xhr.send();
-}
-
-// Ejecutar al cargar la página
-cargarDatosSensor();
-
-// Actualizar cada 10 segundos sin refrescar la página
-setInterval(cargarDatosSensor, 10000);
-</script>
+    
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {

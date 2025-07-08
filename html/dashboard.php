@@ -117,7 +117,7 @@ if ($result && $result->num_rows > 0) {
 date_default_timezone_set('America/Mexico_City');
 
 // Simular evento de movimiento cada que se recarga el dashboard
-$id_sensor = 22; // Cambia esto por un id_sensor válido si es necesario
+$id_sensor = 2; // Cambia esto por un id_sensor válido si es necesario
 
 $insert = $conn->prepare("INSERT INTO deteccion_movimiento (id_sensor, fecha_hora) VALUES (?, NOW())");
 $insert->bind_param("i", $id_sensor);
@@ -125,6 +125,7 @@ $insert->execute();
 $insert->close();
 
 // Contar eventos hoy
+// Eventos de movimiento hoy (usando solo deteccion_movimiento)
 $hoy_inicio = date("Y-m-d") . " 00:00:00";
 $hoy_fin = date("Y-m-d") . " 23:59:59";
 
@@ -136,8 +137,8 @@ $stmt->bind_result($eventosHoy);
 $stmt->fetch();
 $stmt->close();
 
-// Asignar el valor sin borrar las demás estadísticas
 $estadisticas['eventos_hoy'] = $eventosHoy;
+
 ?>
 
 

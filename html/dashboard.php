@@ -117,12 +117,13 @@ if ($result && $result->num_rows > 0) {
 date_default_timezone_set('America/Mexico_City');
 
 // Simular evento de movimiento cada que se recarga el dashboard
-$id_sensor = 2; // Cambia esto por un id_sensor válido si es necesario
+// Desactivado: simulación de movimiento en cada recarga
+// $id_sensor = 22;
+// $insert = $conn->prepare("INSERT INTO deteccion_movimiento (id_sensor, fecha_hora) VALUES (?, NOW())");
+// $insert->bind_param("i", $id_sensor);
+// $insert->execute();
+// $insert->close();
 
-$insert = $conn->prepare("INSERT INTO deteccion_movimiento (id_sensor, fecha_hora) VALUES (?, NOW())");
-$insert->bind_param("i", $id_sensor);
-$insert->execute();
-$insert->close();
 
 // Contar eventos hoy
 // Eventos de movimiento hoy (usando solo deteccion_movimiento)

@@ -14,7 +14,7 @@ if ($conn->connect_error) {
 }
 
 // ID cliente a simular
-$id_cliente = 23;
+$id_cliente = 26;
 
 // Obtener sensores DHT11 (LoRa) para este cliente
 $sensores_dht = [];
